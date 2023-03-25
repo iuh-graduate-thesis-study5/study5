@@ -1,7 +1,8 @@
 import { ACTION_TYPES } from '../actions/user.action';
 
 const initialState = {
-    listUser: []
+    listUser: [],
+    listUserNotAccount: []
 };
 
 export const userReducer = (state = initialState, action) => {
@@ -10,6 +11,11 @@ export const userReducer = (state = initialState, action) => {
             return {
                 ...state,
                 listUser: [...action.payload]
+            };
+        case ACTION_TYPES.USER_NOT_ACCOUNT:
+            return {
+                ...state,
+                listUserNotAccount: [...action.payload]
             };
         default:
             return state;

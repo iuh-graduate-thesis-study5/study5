@@ -19,3 +19,11 @@ export const addUser = (req, res) => {
         return getUser(req, res);
     });
 };
+
+export const userNotAccount = (req, res) => {
+    const q = 'SELECT * FROM nguoidung u WHERE NOT EXISTS(SELECT * FROM taikhoan a WHERE a.id_nguoidung = u.id)';
+    db.query(q, (err, data) => {
+        if (err) return res.status(500).send(err);
+        return res.status(200).json(data);
+    });
+};

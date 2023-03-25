@@ -6,7 +6,8 @@ export default {
     account(url = baseApi + 'account/') {
         return {
             fetchAll: () => axios.get(url + 'get-all-account'),
-            login: (account) => axios.post(url + 'login', account)
+            login: (account) => axios.post(url + 'login', account),
+            register: (account) => axios.post(url + 'register', account)
             // register: (account) => axios.post(url + 'employee/register', account),
             // addAccoutNv: (account) => axios.put(url + 'register', account),
             // add_admin: (admin) => axios.post(url + 'add-admin', admin),
@@ -19,7 +20,8 @@ export default {
     },
     user(url = baseApi + 'users/') {
         return {
-            fetchAllUser: () => axios.get(url + 'get-all-user')
+            fetchAllUser: () => axios.get(url + 'get-all-user'),
+            fetchAllUserNotAccount: () => axios.get(url + 'user-not-account')
         };
     }
 };

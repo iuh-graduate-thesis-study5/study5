@@ -19,7 +19,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Grid from '@mui/material/Grid';
-
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -30,9 +31,14 @@ import DialogTitle from '@mui/material/DialogTitle';
 //Action
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from 'actions/user.action';
+import * as actionsAccount from 'actions/account.action';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import TableHead from '@mui/material/TableHead';
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 function TablePaginationActions(props) {
     const theme = useTheme();
@@ -83,9 +89,21 @@ export default function TableUserManager() {
     const [open, setOpen] = React.useState(false);
     const [detailUser, setDetailUser] = React.useState({});
     const dispatch = useDispatch();
+    const [openSnack, setOpenSnack] = React.useState(false);
 
+    const handleClickSnack = () => {
+        setOpenSnack(true);
+    };
+
+    const handleCloseSnack = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpenSnack(false);
+    };
     useEffect(() => {
-        dispatch(actions.getAllUser());
+        dispatch(actions.getUserNotAccount());
     }, []);
 
     const handleClickOpen = (detail) => {
@@ -96,7 +114,7 @@ export default function TableUserManager() {
     const handleClose = () => {
         setOpen(false);
     };
-    const users = useSelector((state) => state.user.listUser);
+    const users = useSelector((state) => state.user.listUserNotAccount);
     const [listUser, setListUser] = useState([]);
     useEffect(() => {
         setListUser(users);
@@ -116,6 +134,21 @@ export default function TableUserManager() {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
+
+    const handleCreateAccount = () => {
+        const account = {
+            tentaikhoan: detailUser?.email,
+            matkhau: '123456',
+            quyen: 'STUDENT',
+            trangthai: 1,
+            id_nguoidung: detailUser?.id
+        };
+        dispatch(actionsAccount.register(account));
+        setListUser(listUser.filter((item) => item.id !== detailUser?.id));
+        handleClose();
+        handleClickSnack();
+    };
+
     return (
         <>
             <TableContainer component={Paper}>
@@ -206,7 +239,7 @@ export default function TableUserManager() {
                     </Grid>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} variant="contained" size="medium">
+                    <Button onClick={handleCreateAccount} variant="contained" size="medium">
                         Tạo tài khoản
                     </Button>
                     <Button onClick={handleClose} color="error" variant="contained" size="medium">
@@ -214,6 +247,11 @@ export default function TableUserManager() {
                     </Button>
                 </DialogActions>
             </Dialog>
+            <Snackbar open={openSnack} autoHideDuration={5000} onClose={handleCloseSnack} style={{ Zindex: 10 }}>
+                <Alert onClose={handleCloseSnack} severity="success" sx={{ width: '100%' }}>
+                    Tạo tài khoản thành công
+                </Alert>
+            </Snackbar>
         </>
     );
 }
