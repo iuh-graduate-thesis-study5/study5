@@ -17,6 +17,11 @@ export const userReducer = (state = initialState, action) => {
                 ...state,
                 listUserNotAccount: [...action.payload]
             };
+        case ACTION_TYPES.ADD_USER:
+            return {
+                ...state,
+                listUser: [...action.payload]
+            };
         default:
             return state;
     }

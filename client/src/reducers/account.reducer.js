@@ -19,6 +19,11 @@ export const accountReducer = (state = initialState, action) => {
                 ...state,
                 listAccount: [...action.payload]
             };
+        case ACTION_TYPES.UPDATE_ACCOUNT:
+            return {
+                ...state,
+                listAccount: [...action.payload]
+            };
         default:
             return state;
     }

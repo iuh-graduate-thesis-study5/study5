@@ -28,6 +28,9 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 //Action
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from 'actions/user.action';
@@ -86,10 +89,13 @@ TablePaginationActions.propTypes = {
 };
 
 export default function TableUserManager() {
+    const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
     const [detailUser, setDetailUser] = React.useState({});
-    const dispatch = useDispatch();
+    const [role, setRole] = React.useState('STUDENT');
     const [openSnack, setOpenSnack] = React.useState(false);
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(6);
 
     const handleClickSnack = () => {
         setOpenSnack(true);
@@ -120,9 +126,6 @@ export default function TableUserManager() {
         setListUser(users);
     }, [users]);
 
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(6);
-
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - listUser.length) : 0;
 
@@ -139,7 +142,7 @@ export default function TableUserManager() {
         const account = {
             tentaikhoan: detailUser?.email,
             matkhau: '123456',
-            quyen: 'STUDENT',
+            quyen: role,
             trangthai: 1,
             id_nguoidung: detailUser?.id
         };
@@ -147,6 +150,10 @@ export default function TableUserManager() {
         setListUser(listUser.filter((item) => item.id !== detailUser?.id));
         handleClose();
         handleClickSnack();
+    };
+
+    const handleChangeRole = (event) => {
+        setRole(event.target.value);
     };
 
     return (
@@ -165,7 +172,7 @@ export default function TableUserManager() {
                     </TableHead>
                     <TableBody>
                         {(rowsPerPage > 0 ? listUser.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : listUser).map((row) => (
-                            <TableRow key={row.name}>
+                            <TableRow key={row.id}>
                                 <TableCell component="th" scope="row">
                                     {row.tennguoidung}
                                 </TableCell>
@@ -220,21 +227,37 @@ export default function TableUserManager() {
             </TableContainer>
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>
-                    <b>Tạo tài khoản cho người này</b>
+                    <h3>Tạo tài khoản cho người này</h3>
                 </DialogTitle>
                 <DialogContent>
                     <Grid container spacing={2}>
-                        <Grid item xs={5}>
-                            Tên tài khoản
+                        <Grid item xs={4}>
+                            <b>Tên tài khoản</b>
                         </Grid>
-                        <Grid item xs={5}>
+                        <Grid item xs={8}>
                             {detailUser?.email}
                         </Grid>
-                        <Grid item xs={5}>
-                            Mật khẩu
+                        <Grid item xs={4}>
+                            <b>Mật khẩu</b>
                         </Grid>
-                        <Grid item xs={5}>
+                        <Grid item xs={8}>
                             12345
+                        </Grid>
+                        <Grid item xs={4}>
+                            <b>Quyền</b>
+                        </Grid>
+                        <Grid item xs={8} fullWidth>
+                            <Select
+                                fullWidth
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={role}
+                                onChange={handleChangeRole}
+                            >
+                                <MenuItem value={'STUDENT'}>STUDENT</MenuItem>
+                                <MenuItem value={'TEACHER'}>TEACHER</MenuItem>
+                                <MenuItem value={'ADMIN'}>ADMIN</MenuItem>
+                            </Select>
                         </Grid>
                     </Grid>
                 </DialogContent>

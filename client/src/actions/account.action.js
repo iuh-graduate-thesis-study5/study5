@@ -2,7 +2,8 @@ import apiService from '../services/api.service';
 
 export const ACTION_TYPES = {
     FETCH_ALL_ACCCOUNT: 'FETCH_ALL_ACCCOUNT',
-    REGISTER: 'REGISTER'
+    REGISTER: 'REGISTER',
+    UPDATE_ACCOUNT: 'UPDATE_ACCOUNT'
 };
 export const test = () => (dispatch) => {
     apiService
@@ -28,6 +29,18 @@ export const register = (account) => (dispatch) => {
         .then((response) => {
             dispatch({
                 type: ACTION_TYPES.REGISTER,
+                payload: response.data
+            });
+        })
+        .catch((err) => console.log(err));
+};
+export const updateAccount = (account, id) => (dispatch) => {
+    apiService
+        .account()
+        .editAccount(account, id)
+        .then((response) => {
+            dispatch({
+                type: ACTION_TYPES.UPDATE_ACCOUNT,
                 payload: response.data
             });
         })

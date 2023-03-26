@@ -62,10 +62,23 @@ export const getAllAccount = (req, res) => {
     //CHECK USER
 
     const q = 'SELECT * FROM taikhoan';
-    console.log('haha');
     db.query(q, [req.query.cat], (err, data) => {
         if (err) return res.status(500).send(err);
 
         return res.status(200).json(data);
+    });
+};
+
+export const updateAccount = (req, res) => {
+    //CHECK USER
+
+    const userId = req.params.id;
+    const q = 'UPDATE taikhoan SET `quyen`=?,`trangthai`=? WHERE `id` = ?';
+
+    const values = [req.body.quyen, req.body.trangthai];
+
+    db.query(q, [...values, userId], (err, data) => {
+        if (err) return res.status(500).json(err);
+        return getAllAccount(req, res);
     });
 };

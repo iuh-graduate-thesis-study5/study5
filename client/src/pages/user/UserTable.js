@@ -17,6 +17,7 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+
 //Action
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from 'actions/user.action';
@@ -73,23 +74,7 @@ function createData(name, calories, fat) {
     return { name, calories, fat };
 }
 
-const rows = [
-    createData('Cupcake', 305, 3.7),
-    createData('Donut', 452, 25.0),
-    createData('Eclair', 262, 16.0),
-    createData('Frozen yoghurt', 159, 6.0),
-    createData('Gingerbread', 356, 16.0),
-    createData('Honeycomb', 408, 3.2),
-    createData('Ice cream sandwich', 237, 9.0),
-    createData('Jelly Bean', 375, 0.0),
-    createData('KitKat', 518, 26.0),
-    createData('Lollipop', 392, 0.2),
-    createData('Marshmallow', 318, 0),
-    createData('Nougat', 360, 19.0),
-    createData('Oreo', 437, 18.0)
-].sort((a, b) => (a.calories < b.calories ? -1 : 1));
-
-export default function CustomPaginationActionsTable() {
+export default function UserTable() {
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -131,7 +116,7 @@ export default function CustomPaginationActionsTable() {
                 </TableHead>
                 <TableBody>
                     {(rowsPerPage > 0 ? listUser.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : listUser).map((row) => (
-                        <TableRow key={row.name}>
+                        <TableRow key={row.id}>
                             <TableCell component="th" scope="row">
                                 {row.tennguoidung}
                             </TableCell>
@@ -148,10 +133,7 @@ export default function CustomPaginationActionsTable() {
                                 {row.diachi}
                             </TableCell>
                             <TableCell style={{ width: 160 }} align="center">
-                                <IconButton aria-label="delete" size="large">
-                                    <DeleteIcon fontSize="inherit" color="error" />
-                                </IconButton>
-                                <IconButton aria-label="delete" size="large">
+                                <IconButton aria-label="edit" size="large">
                                     <EditIcon fontSize="inherit" color="primary" />
                                 </IconButton>
                             </TableCell>
@@ -168,8 +150,8 @@ export default function CustomPaginationActionsTable() {
                     <TableRow>
                         <TablePagination
                             rowsPerPageOptions={[6, 10, 25, { label: 'All', value: -1 }]}
-                            colSpan={3}
-                            count={rows.length}
+                            colSpan={6}
+                            count={listUser.length}
                             labelRowsPerPage={'Số dòng trên 1 trang'}
                             rowsPerPage={rowsPerPage}
                             page={page}

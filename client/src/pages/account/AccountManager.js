@@ -15,7 +15,18 @@ import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
-import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import Chip from '@mui/material/Chip';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+
 //Action
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from 'actions/account.action';
@@ -90,19 +101,23 @@ const rows = [
 
 export default function AccountTable() {
     const dispatch = useDispatch();
+    const [open, setOpen] = React.useState(false);
+    const [listAccount, setListAccount] = useState([]);
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [detailAccount, setDetailAccount] = React.useState({});
+    const [role, setRole] = React.useState('STUDENT');
+    const [status, setStatus] = React.useState(0);
+
+    const account = useSelector((state) => state.account.listAccount);
 
     useEffect(() => {
         dispatch(actions.test());
     }, []);
 
-    const account = useSelector((state) => state.account.listAccount);
-    const [listAccount, setListAccount] = useState([]);
     useEffect(() => {
         setListAccount(account);
     }, [account]);
-
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - listAccount.length) : 0;
@@ -116,64 +131,159 @@ export default function AccountTable() {
         setPage(0);
     };
 
-    return (
-        <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Tài khoản</TableCell>
-                        <TableCell align="right">Quyền</TableCell>
-                        <TableCell align="right">Trạng thái</TableCell>
-                        <TableCell></TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {(rowsPerPage > 0 ? listAccount.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : listAccount).map(
-                        (row) => (
-                            <TableRow key={row.name}>
-                                <TableCell component="th" scope="row">
-                                    {row.tentaikhoan}
-                                </TableCell>
-                                <TableCell style={{ width: 160 }} align="right">
-                                    {row.quyen}
-                                </TableCell>
-                                <TableCell style={{ width: 160 }} align="right">
-                                    {row.trangthai}
-                                </TableCell>
-                                <TableCell style={{ width: 160 }} align="center">
-                                    <IconButton aria-label="delete" size="large">
-                                        <DeleteIcon fontSize="inherit" color="error" />
-                                    </IconButton>
-                                </TableCell>
-                            </TableRow>
-                        )
-                    )}
+    const handleClickOpen = (account) => {
+        setDetailAccount(account);
+        setRole(account?.quyen);
+        setStatus(account?.trangthai);
+        setOpen(true);
+    };
 
-                    {emptyRows > 0 && (
-                        <TableRow style={{ height: 53 * emptyRows }}>
-                            <TableCell colSpan={6} />
+    const handleClose = () => {
+        setOpen(false);
+    };
+    const handleChangeRole = (event) => {
+        setRole(event.target.value);
+    };
+    const handleChangeStatus = (event) => {
+        setStatus(event.target.value);
+    };
+    const updateAccount = () => {
+        const account_update = {
+            trangthai: status,
+            quyen: role
+        };
+        dispatch(actions.updateAccount(account_update, detailAccount?.id));
+    };
+    // const onFind = (e) => {
+    //     if (listAccount) {
+    //         let rl = listAccount.filter((fb) => fb.tentaikhoan.toLowerCase().includes(e.target.value.toLowerCase()));
+    //         setListAccount(rl);
+    //     }
+    // };
+    return (
+        <>
+            <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Tài khoản</TableCell>
+                            <TableCell align="center">Quyền</TableCell>
+                            <TableCell align="center">Trạng thái</TableCell>
+                            <TableCell></TableCell>
                         </TableRow>
-                    )}
-                </TableBody>
-                <TableFooter>
-                    <TablePagination
-                        rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                        colSpan={5}
-                        count={rows.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        SelectProps={{
-                            inputProps: {
-                                'aria-label': 'rows per page'
-                            },
-                            native: true
-                        }}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                        ActionsComponent={TablePaginationActions}
-                    />
-                </TableFooter>
-            </Table>
-        </TableContainer>
+                    </TableHead>
+                    <TableBody>
+                        {(rowsPerPage > 0 ? listAccount.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : listAccount).map(
+                            (row) => (
+                                <TableRow key={row.id}>
+                                    <TableCell component="th" scope="row">
+                                        {row.tentaikhoan}
+                                    </TableCell>
+                                    <TableCell style={{ width: 160 }} align="center">
+                                        {row.quyen === 'ADMIN' ? (
+                                            <Chip label={row.quyen} color="warning" style={{ borderRadius: 30 }} />
+                                        ) : row.quyen === 'TEACHER' ? (
+                                            <Chip label={row.quyen} color="primary" style={{ borderRadius: 30 }} />
+                                        ) : (
+                                            <Chip label={row.quyen} color="info" style={{ borderRadius: 30 }} />
+                                        )}
+                                    </TableCell>
+                                    <TableCell style={{ width: 160 }} align="center">
+                                        {row.trangthai ? (
+                                            <Chip label="Hoạt động" color="success" style={{ borderRadius: 30 }} />
+                                        ) : (
+                                            <Chip label="Bị khóa" color="error" style={{ borderRadius: 30 }} />
+                                        )}
+                                    </TableCell>
+                                    <TableCell style={{ width: 160 }} align="center">
+                                        <IconButton aria-label="delete" size="large" onClick={() => handleClickOpen(row)}>
+                                            <EditIcon fontSize="inherit" color="primary" />
+                                        </IconButton>
+                                    </TableCell>
+                                </TableRow>
+                            )
+                        )}
+
+                        {emptyRows > 0 && (
+                            <TableRow style={{ height: 53 * emptyRows }}>
+                                <TableCell colSpan={6} />
+                            </TableRow>
+                        )}
+                    </TableBody>
+                    <TableFooter>
+                        <TablePagination
+                            rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+                            colSpan={5}
+                            count={rows.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            SelectProps={{
+                                inputProps: {
+                                    'aria-label': 'rows per page'
+                                },
+                                native: true
+                            }}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                            ActionsComponent={TablePaginationActions}
+                        />
+                    </TableFooter>
+                </Table>
+            </TableContainer>
+            <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>
+                    <h4>Thông tin tài khoản</h4>
+                </DialogTitle>
+                <DialogContent>
+                    <Grid container spacing={2}>
+                        <Grid item xs={4}>
+                            <b>Tên tài khoản</b>
+                        </Grid>
+                        <Grid item xs={8}>
+                            {detailAccount?.tentaikhoan}
+                        </Grid>
+                        <Grid item xs={4}>
+                            <b>Quyền</b>
+                        </Grid>
+                        <Grid item xs={8} fullWidth>
+                            <Select
+                                fullWidth
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={role}
+                                onChange={handleChangeRole}
+                            >
+                                <MenuItem value={'STUDENT'}>STUDENT</MenuItem>
+                                <MenuItem value={'TEACHER'}>TEACHER</MenuItem>
+                                <MenuItem value={'ADMIN'}>ADMIN</MenuItem>
+                            </Select>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <b>Trạng thái hoạt động</b>
+                        </Grid>
+                        <Grid item xs={8} fullWidth>
+                            <Select
+                                fullWidth
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={status}
+                                onChange={handleChangeStatus}
+                            >
+                                <MenuItem value={0}>Bị khóa</MenuItem>
+                                <MenuItem value={1}>Hoạt động</MenuItem>
+                            </Select>
+                        </Grid>
+                    </Grid>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={updateAccount} color="primary" variant="contained" size="medium">
+                        Cập nhật
+                    </Button>
+                    <Button onClick={handleClose} color="error" variant="contained" size="medium">
+                        Đóng
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </>
     );
 }
