@@ -31,7 +31,7 @@ CREATE TABLE `nguoidung` (
   `gioitinh` varchar(45) DEFAULT NULL,
   `diachi` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,7 +40,7 @@ CREATE TABLE `nguoidung` (
 
 LOCK TABLES `nguoidung` WRITE;
 /*!40000 ALTER TABLE `nguoidung` DISABLE KEYS */;
-INSERT INTO `nguoidung` VALUES (1,'TuanKhang','Khang@gmail.com','0976553787','2023-03-23 21:03:44','Nam','HCM'),(2,'HuuTho','Tho@gmail.com','0976553788','2023-03-23 21:03:44','Nu','HCM'),(3,'ThanhHoai','hoai@gmail.com','0978654123','2023-03-23 21:10:55','Nam','HCM'),(4,'ThoBede','thobede@gmail.com','0976553787','2023-03-23 21:30:07','Nữ','HCM'),(5,'ThoBede','thobede@gmail.com','0976553787','2023-03-23 21:30:55','Nữ','HCM'),(6,'ThoBede','thobede@gmail.com','0976553787','2023-03-23 21:31:21','Nữ','HCM'),(7,'ThoBede','thobede@gmail.com','0976553787','2023-03-23 21:31:33','Nữ','HCM'),(8,'ThoBede1','thobede@gmail.com','0976553787','2023-03-23 21:31:45','Nữ','HCM');
+INSERT INTO `nguoidung` VALUES (1,'TuanKhang','Khang@gmail.com','0976553787','2023-03-23 21:03:44','Nam','HCM'),(2,'HuuTho','Tho@gmail.com','0976553788','2023-03-23 21:03:44','Nu','HCM');
 /*!40000 ALTER TABLE `nguoidung` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -56,12 +56,12 @@ CREATE TABLE `taikhoan` (
   `tentaikhoan` varchar(45) NOT NULL,
   `matkhau` varchar(100) NOT NULL,
   `quyen` varchar(45) NOT NULL,
-  `trangthai` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `trangthai` int NOT NULL,
   `id_nguoidung` int NOT NULL,
   PRIMARY KEY (`id`),
   KEY `frk_taikhoan_idx` (`id_nguoidung`),
   CONSTRAINT `fk_id_nguoidung` FOREIGN KEY (`id_nguoidung`) REFERENCES `nguoidung` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -70,7 +70,7 @@ CREATE TABLE `taikhoan` (
 
 LOCK TABLES `taikhoan` WRITE;
 /*!40000 ALTER TABLE `taikhoan` DISABLE KEYS */;
-INSERT INTO `taikhoan` VALUES (1,'thobede1','$2a$10$bKuhAkjjzQ8okRLztpASmeQRVZ332xT8BbAVTg8Yy3HbPVsEzxAD6','STUDENT','1',0),(2,'admin','$2a$10$bKuhAkjjzQ8okRLztpASmeQRVZ332xT8BbAVTg8Yy3HbPVsEzxAD6','ADMIN','1',1);
+INSERT INTO `taikhoan` VALUES (1,'tho','$2a$10$bKuhAkjjzQ8okRLztpASmeQRVZ332xT8BbAVTg8Yy3HbPVsEzxAD6','STUDENT',1,0),(2,'admin','$2a$10$bKuhAkjjzQ8okRLztpASmeQRVZ332xT8BbAVTg8Yy3HbPVsEzxAD6','ADMIN',1,1);
 /*!40000 ALTER TABLE `taikhoan` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -83,4 +83,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-03-24 23:00:07
+-- Dump completed on 2023-03-26 22:49:51
