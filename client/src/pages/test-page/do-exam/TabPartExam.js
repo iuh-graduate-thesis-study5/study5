@@ -5,6 +5,15 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { makeStyles } from '@mui/styles';
+import Part1 from './Part1/index';
+import Part2 from './Part2/index';
+import Part3 from './Part3/index';
+import Part4 from './Part4/index';
+import Part5 from './Part5/index';
+import Part6 from './Part6/index';
+import Part7 from './Part7/index';
+import Button from '@mui/material/Button';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -45,11 +54,31 @@ const useStyles = makeStyles((theme) => ({
 export default function TabPartExam() {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
-
-    const handleChange = (event, newValue) => {
+    const listTab = [0, 1, 2, 3, 4, 5, 6];
+    const listComponent = [<Part1 />, <Part2 />, <Part3 />, <Part4 />, <Part5 />, <Part6 />, <Part7 />];
+    const handleChange = (event, newValue, isScroll = false) => {
         setValue(newValue);
+        if (isScroll) {
+            window.scrollTo({
+                top: 0,
+                left: 0,
+                behavior: 'smooth'
+            });
+        }
     };
-
+    const nextButton = (value) => {
+        return (
+            <div style={{ display: 'flex', justifyContent: 'right' }}>
+                <Button
+                    style={{ backgroundColor: 'white', color: '#35509A', fontSize: 16 }}
+                    variant="text"
+                    onClick={(e) => handleChange(e, value, true)}
+                >
+                    TIẾP THEO <ChevronRightIcon />
+                </Button>
+            </div>
+        );
+    };
     return (
         <Box sx={{ width: '100%' }}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -63,27 +92,12 @@ export default function TabPartExam() {
                     <Tab classes={{ root: classes.tabRoot, selected: classes.selectedTab }} label="Part 7" {...a11yProps(6)} />
                 </Tabs>
             </Box>
-            <TabPanel value={value} index={0}>
-                Part 1
-            </TabPanel>
-            <TabPanel value={value} index={1}>
-                Part 2
-            </TabPanel>
-            <TabPanel value={value} index={2}>
-                Part 3
-            </TabPanel>
-            <TabPanel value={value} index={3}>
-                Part 4
-            </TabPanel>
-            <TabPanel value={value} index={4}>
-                Part 5
-            </TabPanel>
-            <TabPanel value={value} index={5}>
-                Part 6
-            </TabPanel>
-            <TabPanel value={value} index={6}>
-                Part 7
-            </TabPanel>
+            {listTab.map((e) => (
+                <TabPanel value={value} index={e} key={e}>
+                    {listComponent[e]}
+                    {nextButton(e + 1)}
+                </TabPanel>
+            ))}
         </Box>
     );
 }
