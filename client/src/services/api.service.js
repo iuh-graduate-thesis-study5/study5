@@ -17,5 +17,26 @@ export default {
             fetchAllUserNotAccount: () => axios.get(url + 'user-not-account'),
             addUser: (user) => axios.post(url + 'add-user', user)
         };
+    },
+    question(url = baseApi + 'question/') {
+        return {
+            addQuestion: (question) => axios.post(url + 'add-question', question)
+        };
+    },
+    groupQuestion(url = baseApi + 'groupquestion/') {
+        return {
+            addGroupQuestion: (groupQuestion) => axios.post(url + 'add-group-question', groupQuestion),
+            listGroupQuestion: () => axios.get(url + 'get-all-questions')
+        };
+    },
+    answer(url = baseApi + 'answer/') {
+        return {
+            addAnswer: (answer) => axios.post(url + 'add-answer', answer)
+        };
+    },
+    upload(url = baseApi + 'upload/') {
+        return {
+            uploadFile: (formData) => axios.post(url, formData)
+        };
     }
 };

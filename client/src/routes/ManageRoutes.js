@@ -8,6 +8,8 @@ import MainLayout from 'layout/MainLayout';
 // render - login
 const UserManager = Loadable(lazy(() => import('pages/user')));
 const AccountManager = Loadable(lazy(() => import('pages/account')));
+const QuestionManager = Loadable(lazy(() => import('pages/question-manage')));
+const ExamManager = Loadable(lazy(() => import('pages/exam-manage')));
 
 // ==============================|| AUTH ROUTING ||============================== //
 
@@ -28,12 +30,16 @@ const ManageRoutes = {
             element: <UserManager />
         },
         {
+            path: 'exam',
+            element: <ExamManager />
+        },
+        {
             path: 'parts',
             element: <UserManager />
         },
         {
             path: 'question',
-            element: <UserManager />
+            element: <QuestionManager />
         }
     ]
 };

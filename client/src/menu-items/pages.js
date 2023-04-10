@@ -46,31 +46,31 @@ const pages = {
             id: 'dethi',
             title: 'Đề thi',
             type: 'item',
-            url: '/user',
+            url: '/exam',
             icon: icons.BallotIcon,
             target: false
         },
-        {
-            id: 'loaicauhoi',
-            title: 'Loại phần thi',
-            type: 'item',
-            url: '/user',
-            icon: icons.MenuBookIcon,
-            target: false
-        },
-        {
-            id: 'phanthi',
-            title: 'Phần thi',
-            type: 'item',
-            url: '/user',
-            icon: icons.AccountTreeIcon,
-            target: false
-        },
+        // {
+        //     id: 'loaicauhoi',
+        //     title: 'Loại phần thi',
+        //     type: 'item',
+        //     url: '/user',
+        //     icon: icons.MenuBookIcon,
+        //     target: false
+        // },
+        // {
+        //     id: 'phanthi',
+        //     title: 'Phần thi',
+        //     type: 'item',
+        //     url: '/user',
+        //     icon: icons.AccountTreeIcon,
+        //     target: false
+        // },
         {
             id: 'cauhoi',
             title: 'Câu hỏi',
             type: 'item',
-            url: '/user',
+            url: '/question',
             icon: icons.QuizIcon,
             target: false
         }
