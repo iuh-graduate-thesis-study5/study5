@@ -30,7 +30,7 @@ CREATE TABLE `cauhoi` (
   PRIMARY KEY (`id`),
   KEY `frk_nhomcauhoi_cauhoi_idx` (`id_nhomcauhoi`),
   CONSTRAINT `frk_nhomcauhoi_cauhoi` FOREIGN KEY (`id_nhomcauhoi`) REFERENCES `nhomcauhoi` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,7 +39,6 @@ CREATE TABLE `cauhoi` (
 
 LOCK TABLES `cauhoi` WRITE;
 /*!40000 ALTER TABLE `cauhoi` DISABLE KEYS */;
-INSERT INTO `cauhoi` VALUES (1,'What a they','A',1);
 /*!40000 ALTER TABLE `cauhoi` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -59,7 +58,7 @@ CREATE TABLE `dapan` (
   PRIMARY KEY (`id`),
   KEY `frk_id_cauhoi_dapan_idx` (`id_cauhoi`),
   CONSTRAINT `frk_id_cauhoi_dapan` FOREIGN KEY (`id_cauhoi`) REFERENCES `cauhoi` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -68,7 +67,6 @@ CREATE TABLE `dapan` (
 
 LOCK TABLES `dapan` WRITE;
 /*!40000 ALTER TABLE `dapan` DISABLE KEYS */;
-INSERT INTO `dapan` VALUES (1,'Dog',0,'A',1);
 /*!40000 ALTER TABLE `dapan` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -97,7 +95,7 @@ CREATE TABLE `nguoidung` (
 
 LOCK TABLES `nguoidung` WRITE;
 /*!40000 ALTER TABLE `nguoidung` DISABLE KEYS */;
-INSERT INTO `nguoidung` VALUES (1,'HoangLong','Long@gmail.com','0367056454','2023-03-23 21:03:44','Nam','HCM'),(2,'HuuTho','Tho@gmail.com','0976553788','2023-03-23 21:03:44','Nu','HCM'),(11,'Thọ bê đê','a@gmail.com','09878728627','2023-03-26 22:52:55','Nam','123 HCM');
+INSERT INTO `nguoidung` VALUES (1,'Tho','Tho1@gmail.com','0976553787','2023-03-23 21:03:44','Nam','HCM'),(2,'Tho','Tho@gmail.com','0976553788','2023-03-23 21:03:44','Nu','HCM'),(11,'Thọ bê đê','a@gmail.com','09878728627','2023-03-26 22:52:55','Nam','123 HCM');
 /*!40000 ALTER TABLE `nguoidung` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -111,14 +109,15 @@ DROP TABLE IF EXISTS `nhomcauhoi`;
 CREATE TABLE `nhomcauhoi` (
   `id` int NOT NULL AUTO_INCREMENT,
   `noidungcauhoi` longtext NOT NULL,
-  `hinhanh` varchar(255) DEFAULT NULL,
-  `amthanh` varchar(255) DEFAULT NULL,
+  `hinhanh` varchar(1000) DEFAULT NULL,
+  `amthanh` varchar(1000) DEFAULT NULL,
   `ngaytao` datetime DEFAULT CURRENT_TIMESTAMP,
+  `phancauhoi` int NOT NULL DEFAULT '1',
   `id_nguoitao` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `frk_nguoitao_idx` (`id_nguoitao`),
   CONSTRAINT `frk_nguoitao` FOREIGN KEY (`id_nguoitao`) REFERENCES `taikhoan` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -127,7 +126,6 @@ CREATE TABLE `nhomcauhoi` (
 
 LOCK TABLES `nhomcauhoi` WRITE;
 /*!40000 ALTER TABLE `nhomcauhoi` DISABLE KEYS */;
-INSERT INTO `nhomcauhoi` VALUES (1,'What is this',NULL,NULL,'2023-04-03 22:14:31',1),(2,'What is this',NULL,NULL,'2023-04-03 22:14:54',1);
 /*!40000 ALTER TABLE `nhomcauhoi` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -170,4 +168,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-03 23:12:25
+-- Dump completed on 2023-04-10 22:05:11

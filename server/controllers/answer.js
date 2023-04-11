@@ -1,4 +1,5 @@
 import { db } from '../db.js';
+import { getAllQuestion } from './groupQuestion.js';
 
 export const addAnswer = (req, res) => {
     const q = 'INSERT INTO dapan(`noidung`, `loaidapan`,`dapanthu`, `id_cauhoi`) VALUES (?)';
@@ -7,6 +8,6 @@ export const addAnswer = (req, res) => {
 
     db.query(q, [values], (err, data) => {
         if (err) return res.status(500).json(err);
-        return res.status(200).json(data);
+        return getAllQuestion(req, res);
     });
 };
