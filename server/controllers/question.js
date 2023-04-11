@@ -1,5 +1,13 @@
 import { db } from '../db.js';
 
+export const getAllQuestion = (req, res) => {
+    //CHECK USER
+    const q = `select * from nhomcauhoi`;
+    db.query(q, (err, data) => {
+        if (err) return res.status(500).send(err);
+        return res.status(200).json(data);
+    });
+};
 export const addQuestion = (req, res) => {
     const q = 'INSERT INTO cauhoi(`noidung`, `dapandung`, `id_nhomcauhoi`) VALUES (?)';
 

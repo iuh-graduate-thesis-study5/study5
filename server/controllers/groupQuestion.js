@@ -1,20 +1,33 @@
 import { db } from '../db.js';
-
-export const getUser = (req, res) => {
-    //CHECK USER
-    const q = 'SELECT * FROM nguoidung';
-    db.query(q, (err, data) => {
-        if (err) return res.status(500).send(err);
-        return res.status(200).json(data);
-    });
+import { nhomcauhoi } from '../entity/GroupQuestion.js';
+import { cauhoi } from '../entity/Question.js';
+import { dapan } from '../entity/Answer.js';
+export const getAllQuestion = (req, res) => {
+    nhomcauhoi
+        .findAll({
+            include: [
+                {
+                    model: cauhoi,
+                    include: [
+                        {
+                            model: dapan
+                        }
+                    ]
+                }
+            ],
+            order: [['phancauhoi', 'ASC']]
+        })
+        .then((users) => {
+            return res.status(200).json(users);
+        })
+        .catch((err) => {
+            return res.status(400).json({ err });
+        });
 };
 
 export const addGroupQuestion = (req, res) => {
-    console.log('a');
-    const q = 'INSERT INTO nhomcauhoi(`noidungcauhoi`, `hinhanh`, `amthanh`, `id_nguoitao`) VALUES (?)';
-    console.log('a');
-
-    const values = [req.body.noidungcauhoi, req.body.hinhanh, req.body.amthanh, req.body.id_nguoitao];
+    const q = 'INSERT INTO nhomcauhoi(`noidungcauhoi`, `hinhanh`, `amthanh`, `phancauhoi`,`id_nguoitao`) VALUES (?)';
+    const values = [req.body.noidungcauhoi, req.body.hinhanh, req.body.amthanh, req.body.phancauhoi, req.body.id_nguoitao];
 
     db.query(q, [values], (err, data) => {
         if (err) return res.status(500).json(err);
