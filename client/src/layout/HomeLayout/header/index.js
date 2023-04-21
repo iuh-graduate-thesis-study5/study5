@@ -16,7 +16,10 @@ import { Link } from 'react-router-dom';
 import logo from '../../../assets/logo/logo.png';
 import { ProfileOutlined, LogoutOutlined, ReconciliationOutlined } from '@ant-design/icons';
 
-const pages = ['Trang chủ', 'Ngân hàng đề thi'];
+const pages = [
+    { text: 'Trang chủ', link: '/home' },
+    { text: 'Thư viện đề thi', link: '/home/exams-library' }
+];
 const settings = [
     { text: 'Thông tin cá nhân', icon: <ProfileOutlined />, link: '/user-detail' },
     { text: 'Trang quản lý', icon: <ReconciliationOutlined />, link: '/' },
@@ -46,26 +49,30 @@ function ResponsiveAppBar() {
         <AppBar position="sticky" style={{ backgroundColor: 'white', margin: 0 }}>
             <Container maxWidth="xl" style={{ backgroundColor: 'white', margin: 0 }}>
                 <Toolbar disableGutters>
-                    <img style={{ width: '6rem' }} src={logo} alt="logo" />
+                    <Link to={'/home'} style={{ textDecoration: 'none', color: 'black' }}>
+                        <img style={{ width: '6rem' }} src={logo} alt="logo" />
+                    </Link>
 
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                        {pages.map((page) => (
-                            <Button
-                                key={page}
-                                onClick={handleCloseNavMenu}
-                                sx={{
-                                    my: 2,
-                                    color: 'black',
-                                    fontWeight: 'bold',
-                                    display: 'block',
-                                    pt: 0,
-                                    pb: 0,
-                                    pr: 2,
-                                    pl: 2
-                                }}
-                            >
-                                {page}
-                            </Button>
+                        {pages.map((page, i) => (
+                            <Link key={i} to={page.link} style={{ textDecoration: 'none', color: 'black' }}>
+                                <Button
+                                    key={i}
+                                    onClick={handleCloseNavMenu}
+                                    sx={{
+                                        my: 2,
+                                        color: 'black',
+                                        fontWeight: 'bold',
+                                        display: 'block',
+                                        pt: 0,
+                                        pb: 0,
+                                        pr: 2,
+                                        pl: 2
+                                    }}
+                                >
+                                    {page.text}
+                                </Button>
+                            </Link>
                         ))}
                     </Box>
 

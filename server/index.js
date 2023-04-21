@@ -4,6 +4,7 @@ import userRoutes from './routes/users.js';
 import questionRouter from './routes/question.js';
 import answerRouter from './routes/answer.js';
 import groupQuestionRouter from './routes/groupQuestion.js';
+import examRouter from './routes/exam.router.js';
 import uploadRouter from './routes/upload.js';
 import cookieParser from 'cookie-parser';
 import multer from 'multer';
@@ -25,7 +26,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 app.use('/api/upload', uploadRouter);
-
+app.use('/api/exam', examRouter);
 app.use('/api/account', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/question', questionRouter);

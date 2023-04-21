@@ -10,6 +10,11 @@ const UserManager = Loadable(lazy(() => import('pages/user')));
 const AccountManager = Loadable(lazy(() => import('pages/account')));
 const QuestionManager = Loadable(lazy(() => import('pages/question-manage')));
 const ExamManager = Loadable(lazy(() => import('pages/exam-manage')));
+const DoExam = Loadable(lazy(() => import('pages/exam-manage/child-view/do-exam')));
+const FinalExam = Loadable(lazy(() => import('pages/exam-manage/child-view/final-exam')));
+const ResultExam = Loadable(lazy(() => import('pages/exam-manage/child-view/result-exam')));
+
+const DetailAccount = Loadable(lazy(() => import('pages/detail-account')));
 
 // ==============================|| AUTH ROUTING ||============================== //
 
@@ -34,12 +39,28 @@ const ManageRoutes = {
             element: <ExamManager />
         },
         {
+            path: 'exam/view-question/:id',
+            element: <DoExam />
+        },
+        {
+            path: 'exam/view-final/:id',
+            element: <FinalExam />
+        },
+        {
+            path: 'exam/result-exam',
+            element: <ResultExam />
+        },
+        {
             path: 'parts',
             element: <UserManager />
         },
         {
             path: 'question',
             element: <QuestionManager />
+        },
+        {
+            path: 'user-detail',
+            element: <DetailAccount />
         }
     ]
 };

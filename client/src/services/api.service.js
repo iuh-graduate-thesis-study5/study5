@@ -38,5 +38,12 @@ export default {
         return {
             uploadFile: (formData) => axios.post(url, formData)
         };
+    },
+    exam(url = baseApi + 'exam/') {
+        return {
+            getAllExam: () => axios.get(url + '/get-exam'),
+            getExamById: (id) => axios.get(url + '/get-exam-by-id/' + id),
+            createExam: (exam) => axios.post(url + '/generate-exam', exam)
+        };
     }
 };

@@ -61,7 +61,7 @@ export const logout = (req, res) => {
 export const getAllAccount = (req, res) => {
     //CHECK USER
 
-    const q = 'SELECT * FROM taikhoan';
+    const q = 'SELECT * FROM taikhoan tk inner join nguoidung nd on tk.id_nguoidung = nd.id';
     db.query(q, [req.query.cat], (err, data) => {
         if (err) return res.status(500).send(err);
 

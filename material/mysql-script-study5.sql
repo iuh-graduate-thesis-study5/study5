@@ -16,6 +16,61 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `cauhoi`
+--
+
+DROP TABLE IF EXISTS `cauhoi`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `cauhoi` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `noidung` varchar(255) DEFAULT NULL,
+  `dapandung` varchar(45) NOT NULL,
+  `id_nhomcauhoi` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `frk_nhomcauhoi_cauhoi_idx` (`id_nhomcauhoi`),
+  CONSTRAINT `frk_nhomcauhoi_cauhoi` FOREIGN KEY (`id_nhomcauhoi`) REFERENCES `nhomcauhoi` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cauhoi`
+--
+
+LOCK TABLES `cauhoi` WRITE;
+/*!40000 ALTER TABLE `cauhoi` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cauhoi` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `dapan`
+--
+
+DROP TABLE IF EXISTS `dapan`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `dapan` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `noidung` varchar(45) DEFAULT NULL,
+  `loaidapan` int NOT NULL,
+  `dapanthu` varchar(45) DEFAULT NULL,
+  `id_cauhoi` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `frk_id_cauhoi_dapan_idx` (`id_cauhoi`),
+  CONSTRAINT `frk_id_cauhoi_dapan` FOREIGN KEY (`id_cauhoi`) REFERENCES `cauhoi` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dapan`
+--
+
+LOCK TABLES `dapan` WRITE;
+/*!40000 ALTER TABLE `dapan` DISABLE KEYS */;
+/*!40000 ALTER TABLE `dapan` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `nguoidung`
 --
 
@@ -31,7 +86,7 @@ CREATE TABLE `nguoidung` (
   `gioitinh` varchar(45) DEFAULT NULL,
   `diachi` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,8 +95,38 @@ CREATE TABLE `nguoidung` (
 
 LOCK TABLES `nguoidung` WRITE;
 /*!40000 ALTER TABLE `nguoidung` DISABLE KEYS */;
-INSERT INTO `nguoidung` VALUES (1,'TuanKhang','Khang@gmail.com','0976553787','2023-03-23 21:03:44','Nam','HCM'),(2,'HuuTho','Tho@gmail.com','0976553788','2023-03-23 21:03:44','Nu','HCM');
+INSERT INTO `nguoidung` VALUES (1,'Tho','Tho1@gmail.com','0976553787','2023-03-23 21:03:44','Nam','HCM'),(2,'Tho','Tho@gmail.com','0976553788','2023-03-23 21:03:44','Nu','HCM'),(11,'Thọ bê đê','a@gmail.com','09878728627','2023-03-26 22:52:55','Nam','123 HCM');
 /*!40000 ALTER TABLE `nguoidung` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `nhomcauhoi`
+--
+
+DROP TABLE IF EXISTS `nhomcauhoi`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `nhomcauhoi` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `noidungcauhoi` longtext NOT NULL,
+  `hinhanh` varchar(1000) DEFAULT NULL,
+  `amthanh` varchar(1000) DEFAULT NULL,
+  `ngaytao` datetime DEFAULT CURRENT_TIMESTAMP,
+  `phancauhoi` int NOT NULL DEFAULT '1',
+  `id_nguoitao` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `frk_nguoitao_idx` (`id_nguoitao`),
+  CONSTRAINT `frk_nguoitao` FOREIGN KEY (`id_nguoitao`) REFERENCES `taikhoan` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `nhomcauhoi`
+--
+
+LOCK TABLES `nhomcauhoi` WRITE;
+/*!40000 ALTER TABLE `nhomcauhoi` DISABLE KEYS */;
+/*!40000 ALTER TABLE `nhomcauhoi` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -61,7 +146,7 @@ CREATE TABLE `taikhoan` (
   PRIMARY KEY (`id`),
   KEY `frk_taikhoan_idx` (`id_nguoidung`),
   CONSTRAINT `fk_id_nguoidung` FOREIGN KEY (`id_nguoidung`) REFERENCES `nguoidung` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -70,7 +155,7 @@ CREATE TABLE `taikhoan` (
 
 LOCK TABLES `taikhoan` WRITE;
 /*!40000 ALTER TABLE `taikhoan` DISABLE KEYS */;
-INSERT INTO `taikhoan` VALUES (1,'tho','$2a$10$bKuhAkjjzQ8okRLztpASmeQRVZ332xT8BbAVTg8Yy3HbPVsEzxAD6','STUDENT',1,0),(2,'admin','$2a$10$bKuhAkjjzQ8okRLztpASmeQRVZ332xT8BbAVTg8Yy3HbPVsEzxAD6','ADMIN',1,1);
+INSERT INTO `taikhoan` VALUES (1,'tho','$2a$10$bKuhAkjjzQ8okRLztpASmeQRVZ332xT8BbAVTg8Yy3HbPVsEzxAD6','STUDENT',1,0),(2,'admin','$2a$10$bKuhAkjjzQ8okRLztpASmeQRVZ332xT8BbAVTg8Yy3HbPVsEzxAD6','ADMIN',1,1),(18,'a@gmail.com','$2a$10$b..Xcnq9JmQp.l7sauK7HOxOEjQKLSM0G6gmoOK/cHnrLYLGe4Zpi','STUDENT',0,11);
 /*!40000 ALTER TABLE `taikhoan` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -83,4 +168,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-03-26 22:49:51
+-- Dump completed on 2023-04-10 22:05:11

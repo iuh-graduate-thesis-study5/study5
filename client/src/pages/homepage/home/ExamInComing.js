@@ -1,12 +1,10 @@
 import CardExamIncoming from './CardExamIncoming';
 import Grid from '@mui/material/Grid';
-export default function ExamInComing() {
+export default function ExamInComing({ listExam }) {
     return (
         <>
             <Grid container spacing={2}>
-                <Grid item xs={3}>
-                    <CardExamIncoming />
-                </Grid>
+                <CardExamIncoming listExam={listExam} />
             </Grid>
         </>
     );

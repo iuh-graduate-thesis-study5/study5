@@ -15,7 +15,7 @@ const storage = getStorage();
 // Setting up multer as a middleware to grab photo uploads
 const upload = multer({ storage: multer.memoryStorage() });
 
-router.post('/', upload.single('filename'), async (req, res) => {
+const uploadFile = async (req, res) => {
     try {
         const dateTime = giveCurrentDateTime();
 
@@ -43,7 +43,9 @@ router.post('/', upload.single('filename'), async (req, res) => {
     } catch (error) {
         return res.status(400).send(error.message);
     }
-});
+};
+
+router.post('/', upload.single('filename'), uploadFile);
 
 const giveCurrentDateTime = () => {
     const today = new Date();

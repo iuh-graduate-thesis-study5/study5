@@ -12,41 +12,42 @@ import Formsy from 'formsy-react';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import { useDispatch } from 'react-redux';
-import * as action from 'actions/user.action';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import * as action from 'actions/account.action';
+import UserTable from './UserTable';
+import iconman from '../../assets/user/icon-man.png';
+import iconwoman from '../../assets/user/icon-women.png';
+import Badge from '@mui/material/Badge';
+import SyncAltIcon from '@mui/icons-material/SyncAlt';
+import * as examAction from 'actions/exam.action';
+import 'css/exam.css';
 const initialFieldValues = {
-    tennguoidung: '',
-    email: '',
-    sodienthoai: '',
-    diachi: '',
-    gioitinh: 'Nam'
+    tieude: '',
+    mota: ''
 };
 export default function AccountButtonComponent() {
     const dispatch = useDispatch();
+    const [value, setValue] = React.useState(dayjs(Date.now()));
     const [open, setOpen] = React.useState(false);
+    const users = useSelector((state) => state.account.listAccount);
+    const [listUser, setListUser] = React.useState([]);
+    const [listStudent, setListStudent] = React.useState([]);
+    const [type, setType] = React.useState(0);
+    React.useEffect(() => {
+        dispatch(action.test());
+    }, []);
+    React.useEffect(() => {
+        if (users) {
+            setListUser(users);
+        }
+    }, [users]);
     const validate = (fieldValues = values) => {
         let temp = { ...errors };
-        // if ('ten' in fieldValues) {
-        //     let err = 0;
-        //     listCategoryShow.map((u) => {
-        //         if (u.ten.toLowerCase() === fieldValues.ten.toLowerCase() && fieldValues.ten !== tenLp) {
-        //             err = err + 1;
-        //         }
-        //     });
-        //     if (err >= 1) {
-        //         err < 1 ? (temp.ten = '') : (temp.ten = 'Loại phòng này đã có');
-        //     } else if (fieldValues.ten === '') {
-        //         temp.ten = fieldValues.ten ? '' : 'Tên khách sạn không được để trống';
-        //     } else if (fieldValues.ten !== '') {
-        //         temp.ten =
-        //             /^[a-zA-ZàáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉịòóõọỏôốồổỗộơớờởỡợùúũụủưứừửữựỳỵỷỹýÀÁÃẠẢĂẮẰẲẴẶÂẤẦẨẪẬÈÉẸẺẼÊỀẾỂỄỆĐÌÍĨỈỊÒÓÕỌỎÔỐỒỔỖỘƠỚỜỞỠỢÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ]{1,15}(?: [a-zA-ZàáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉịòóõọỏôốồổỗộơớờởỡợùúũụủưứừửữựỳỵỷỹýÀÁÃẠẢĂẮẰẲẴẶÂẤẦẨẪẬÈÉẸẺẼÊỀẾỂỄỆĐÌÍĨỈỊÒÓÕỌỎÔỐỒỔỖỘƠỚỜỞỠỢÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ]+){0,6}$/.test(
-        //                 fieldValues.ten
-        //             )
-        //                 ? ''
-        //                 : 'Tên khách sạn không chứa chữ số hoặc kí tự đặc biệt';
-        //     }
-        // }
         if ('tennguoidung' in fieldValues) {
             temp.tennguoidung = fieldValues.tennguoidung ? '' : 'Số người không được để trống';
         }
@@ -69,26 +70,61 @@ export default function AccountButtonComponent() {
     };
     const handleSubmit = () => {
         if (validate()) {
-            dispatch(action.addUser(values));
             handleClose();
         }
+    };
+    const addStudent = (user) => {
+        setListUser(listUser.filter((item) => item.id !== user.id));
+        setListStudent((oldArray) => [...oldArray, user]);
+    };
+    const removeStudent = (user) => {
+        setListStudent(listStudent.filter((item) => item.id !== user.id));
+        setListUser((oldArray) => [...oldArray, user]);
+    };
+    const changeTypeOfExam = (event) => {
+        setType(event.target.value);
+    };
+    const generateExam = () => {
+        const listIdStudent = [];
+        for (let i = 0; i < listStudent.length; i++) {
+            listIdStudent.push(listStudent[i].id);
+        }
+        values.id_nguoitao = 1;
+        values.thoigianthi = value;
+        values.loaidethi = type;
+        values.listStudent = listIdStudent;
+        dispatch(examAction.generateExam(values));
     };
     return (
         <div style={{ margin: '1rem 0' }}>
             <Button variant="contained" size="medium" onClick={handleClickOpen}>
                 Tạo đề thi mới
             </Button>
-            <Dialog open={open} onClose={handleClose} fullWidth={'xs'}>
-                <DialogTitle>Nhập thông tin người dùng</DialogTitle>
+            <Dialog open={open} onClose={handleClose} maxWidth={'lg'} fullWidth={true}>
+                <DialogTitle>Nhập thông tin đề thi</DialogTitle>
                 <DialogContent>
                     <Formsy onSubmit={handleSubmit} style={{ margin: '1rem 0' }}>
                         <Grid container spacing={1}>
-                            <Grid item xs={6}>
+                            <Grid item xs={4}>
+                                <p>Tiêu đề</p>
+                                <TextField
+                                    id="tieude"
+                                    variant="outlined"
+                                    name="tieude"
+                                    type="text"
+                                    autoComplete="off"
+                                    InputProps={{ inputProps: { min: 0, max: 20 } }}
+                                    fullWidth
+                                    value={values.tieude || ''}
+                                    onChange={handleInputChange}
+                                    {...(errors.tieude && { error: true, helperText: errors.tieude })}
+                                />
+                            </Grid>
+                            <Grid item xs={4}>
+                                <p>Người tạo đề</p>
                                 <TextField
                                     id="tennguoidung"
-                                    label="Tên người dùng *"
                                     variant="outlined"
-                                    helperText=" "
                                     name="tennguoidung"
                                     type="text"
                                     autoComplete="off"
@@ -99,77 +135,94 @@ export default function AccountButtonComponent() {
                                     {...(errors.tennguoidung && { error: true, helperText: errors.tennguoidung })}
                                 />
                             </Grid>
-                            <Grid item xs={6}>
-                                <TextField
-                                    id="email"
-                                    label="Email *"
-                                    variant="outlined"
-                                    helperText=" "
-                                    name="email"
-                                    type="email"
-                                    autoComplete="off"
-                                    InputProps={{ inputProps: { min: 0, max: 20 } }}
-                                    fullWidth
-                                    value={values.email || ''}
-                                    onChange={handleInputChange}
-                                    {...(errors.email && { error: true, helperText: errors.email })}
-                                />
-                            </Grid>
-                            <Grid item xs={6}>
-                                <TextField
-                                    id="sodienthoai"
-                                    label="Số điện thoại"
-                                    variant="outlined"
-                                    helperText=" "
-                                    name="sodienthoai"
-                                    type="text"
-                                    autoComplete="off"
-                                    InputProps={{ inputProps: { min: 0, max: 20 } }}
-                                    fullWidth
-                                    value={values.sodienthoai || ''}
-                                    onChange={handleInputChange}
-                                    {...(errors.sodienthoai && { error: true, helperText: errors.sodienthoai })}
-                                />
-                            </Grid>
-                            <Grid item xs={6}>
+                            <Grid item xs={4}>
+                                <p>Loại đề</p>
                                 <Select
                                     id="gioitinh"
                                     name="gioitinh"
                                     fullWidth
                                     labelId="demo-simple-select-label"
-                                    value={values.gioitinh}
-                                    onChange={handleInputChange}
+                                    value={type}
+                                    onChange={changeTypeOfExam}
                                 >
-                                    <MenuItem value={'Nam'}>Nam</MenuItem>
-                                    <MenuItem value={'Nữ'}>Nữ</MenuItem>
+                                    <MenuItem value={0}>Đề kiểm tra</MenuItem>
+                                    <MenuItem value={1}>Đề thi thử</MenuItem>
                                 </Select>
                             </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    id="diachi"
-                                    label="Địa chỉ"
-                                    variant="outlined"
-                                    helperText=" "
-                                    name="diachi"
-                                    type="text"
-                                    autoComplete="off"
-                                    InputProps={{ inputProps: { min: 0, max: 20 } }}
-                                    fullWidth
-                                    value={values.diachi || ''}
-                                    onChange={handleInputChange}
-                                    {...(errors.diachi && { error: true, helperText: errors.diachi })}
-                                />
-                            </Grid>
+                            {type === 0 ? (
+                                <>
+                                    <Grid item xs={12}>
+                                        <p>Thời gian thi</p>
+                                        <LocalizationProvider dateAdapter={AdapterDayjs} style={{ padding: 0 }}>
+                                            <DemoContainer components={['DateTimePicker', 'DateTimePicker']} style={{ padding: 0 }}>
+                                                <DateTimePicker value={value} onChange={(newValue) => setValue(newValue)} />
+                                            </DemoContainer>
+                                        </LocalizationProvider>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <p>Ghi chú</p>
+                                        <TextField
+                                            id="mota"
+                                            variant="outlined"
+                                            name="mota"
+                                            type="text"
+                                            autoComplete="off"
+                                            InputProps={{ inputProps: { min: 0, max: 20 } }}
+                                            fullWidth
+                                            value={values.mota || ''}
+                                            onChange={handleInputChange}
+                                            {...(errors.mota && { error: true, helperText: errors.mota })}
+                                            multiline
+                                            rows={4}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={5.5}>
+                                        <h4>Danh sách học viên</h4>
+                                        <UserTable lsUser={listUser} addStudent={addStudent} />
+                                    </Grid>
+                                    <Grid item xs={1} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                        <SyncAltIcon style={{ fontSize: 40, color: 'gray' }} />
+                                    </Grid>
+                                    <Grid item xs={5.5}>
+                                        <h4>Danh sách thí sinh dự thi</h4>
+                                        <Grid container spacing={2}>
+                                            {listStudent.map((e) =>
+                                                e.gioitinh === 'Nam' ? (
+                                                    <Grid item xs={2} style={{ textAlign: 'center', position: 'relative' }} key={e.id}>
+                                                        <img style={{ width: '100%' }} src={iconman} alt="man" />
+                                                        <span>{e.tennguoidung}</span>
+                                                        <div className="minus" onClick={() => removeStudent(e)} aria-hidden="true">
+                                                            _
+                                                        </div>
+                                                    </Grid>
+                                                ) : (
+                                                    <Grid item xs={2} style={{ textAlign: 'center', position: 'relative' }} key={e.id}>
+                                                        <img style={{ width: '100%' }} src={iconwoman} alt="woman" />
+                                                        <span>{e.tennguoidung}</span>
+                                                        <div className="minus" onClick={() => removeStudent(e)} aria-hidden="true">
+                                                            _
+                                                        </div>
+                                                    </Grid>
+                                                )
+                                            )}
+                                        </Grid>
+                                    </Grid>
+                                </>
+                            ) : (
+                                <></>
+                            )}
                         </Grid>
+                        <br></br>
                         <Button
                             fullWidth
                             size="large"
                             variant="contained"
                             color="primary"
                             type="submit"
+                            onClick={generateExam}
                             // style={{ display: displayButton }}
                         >
-                            Thêm người dùng
+                            TẠO ĐỀ THI
                         </Button>
                     </Formsy>
                 </DialogContent>

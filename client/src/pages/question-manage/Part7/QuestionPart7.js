@@ -25,7 +25,9 @@ export default function QuestionPart7({ detailGroupQuestion }) {
                         padding: 16
                     }}
                 >
-                    <p style={{ fontSize: 16, marginTop: 3, marginBottom: 10 }}>{detailGroupQuestion?.noidungcauhoi}</p>
+                    <p style={{ whiteSpace: 'pre-line', fontSize: 16, marginTop: 3, marginBottom: 10 }}>
+                        {detailGroupQuestion?.noidungcauhoi}
+                    </p>
                 </Grid>
                 <Grid
                     xs={4.5}
@@ -43,7 +45,7 @@ export default function QuestionPart7({ detailGroupQuestion }) {
                                         <strong className="number-question">{i + 1}</strong>
                                     </div>
                                     <div>
-                                        <p style={{ fontSize: 16, marginTop: 3, marginBottom: 10 }}>{e?.noidung}</p>
+                                        <p style={{ whiteSpace: 'pre-line', fontSize: 16, marginTop: 3, marginBottom: 10 }}>{e?.noidung}</p>
                                         {e?.dapans
                                             ?.sort((a, b) => (a?.dapanthu > b.dapanthu ? 1 : -1))
                                             .map((da) => (

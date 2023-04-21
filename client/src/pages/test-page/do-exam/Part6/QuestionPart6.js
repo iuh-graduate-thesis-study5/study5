@@ -5,15 +5,34 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import Grid from '@mui/material/Grid';
+import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import * as action from 'actions/question.action';
+import { useDispatch } from 'react-redux';
 import 'css/question.css';
 
-export default function QuestionPart6() {
-    const listQuestion = [1, 2, 3, 4, 5, 6];
-    const listGroupQuestion = [1, 2, 3, 4];
+export default function QuestionPart6({ question }) {
+    const numberQuestion = [28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40];
+    const dispatch = useDispatch();
+    const [listQuestion, setListQuestion] = useState([]);
+    const questions = useSelector((state) => state.question.listDefaultChoosenQuestion);
 
+    useEffect(() => {
+        setListQuestion(questions);
+    }, [questions]);
+    const chooseQuestion = (questionIndex, answer) => {
+        const question = {
+            numberQuestion: questionIndex + 1,
+            isChoosen: true,
+            answer: answer,
+            className: 'inputColorActive'
+        };
+        listQuestion.splice(questionIndex, 1, question);
+        dispatch(action.chooseQuestion(listQuestion));
+    };
     return (
         <>
-            {listQuestion.map((e) => (
+            {question?.map((e, i) => (
                 <Grid container style={{ margin: '0 -1rem', paddingBottom: 32 }}>
                     <Grid
                         item
@@ -24,14 +43,8 @@ export default function QuestionPart6() {
                             padding: 16
                         }}
                     >
-                        <p style={{ fontSize: 16, marginTop: 3, marginBottom: 10 }}>
-                            Dear Director Yoshida, <br />
-                            Thank you for your school's interest in visiting our farm next month. Please note that children must be at least
-                            six years old to visit and tour the farm.-----(139). I have enclosed a list of the ----- ( 140) activities
-                            available for our young visitors. Two of these ----- (141) must be scheduled in advance. They are a
-                            cheese-making class and an introduction to beekeeping. Both are very popular with our visitors. Please let -----
-                            (142) know your selection by early next week. I look forward to welcoming your group soon! Sincerely, Annabel
-                            Romero, Coordinator Merrytree Family Farm.
+                        <p style={{ whiteSpace: 'pre-line', fontSize: 16, marginTop: 3, marginBottom: 10 }}>
+                            {e?.nhomcauhoi?.noidungcauhoi}
                         </p>
                     </Grid>
                     <Grid
@@ -42,32 +55,30 @@ export default function QuestionPart6() {
                             padding: '0 16px 16px 16px'
                         }}
                     >
-                        {listGroupQuestion.map((i) => (
-                            <div style={{ margin: '1rem 0' }} key={i}>
+                        {e?.nhomcauhoi?.cauhois?.map((nch, ind) => (
+                            <div style={{ margin: '1rem 0' }} key={ind}>
                                 <div style={{ display: 'flex' }}>
                                     <div>
-                                        <strong className="number-question">{e}</strong>
+                                        <strong className="number-question">{numberQuestion[i * 4 + ind]}</strong>
                                     </div>
                                     <div>
-                                        <input type="radio" id="html" name="fav_language" value="A" />
-                                        <label htmlFor="A" style={{ fontSize: 16 }}>
-                                            A.
-                                        </label>
-                                        <br />
-                                        <input type="radio" id="css" name="fav_language" value="B" />
-                                        <label htmlFor="B" style={{ fontSize: 16 }}>
-                                            B.
-                                        </label>
-                                        <br />
-                                        <input type="radio" id="javascript" name="fav_language" value="C" />
-                                        <label htmlFor="C" style={{ fontSize: 16 }}>
-                                            C.
-                                        </label>
-                                        <br />
-                                        <input type="radio" id="javascript" name="fav_language" value="C" />
-                                        <label htmlFor="D" style={{ fontSize: 16 }}>
-                                            D.
-                                        </label>
+                                        {nch?.dapans
+                                            ?.sort((a, b) => (a?.dapanthu > b.dapanthu ? 1 : -1))
+                                            .map((da) => (
+                                                <>
+                                                    <input
+                                                        type="radio"
+                                                        id={'q' + da.dapanthu}
+                                                        name={'q6' + numberQuestion[i * 4 + ind]}
+                                                        value={da.dapanthu}
+                                                        onClick={() => chooseQuestion(numberQuestion[i * 4 + ind] - 1, da.dapanthu)}
+                                                    />
+                                                    <label htmlFor="A" style={{ fontSize: 16 }}>
+                                                        {da?.dapanthu}. {da.noidung}
+                                                    </label>
+                                                    <br />
+                                                </>
+                                            ))}
                                     </div>
                                 </div>
                             </div>

@@ -14,7 +14,6 @@ export default function ListQuestion() {
 
     useEffect(() => {
         setListQuestion(questions);
-        console.log('hâ');
     }, [questions]);
     // Renderer callback with condition
     // console.log(questions);
@@ -31,6 +30,7 @@ export default function ListQuestion() {
             );
         }
     };
+    console.log(listQuestion);
     return (
         <div style={{ margin: '2rem 0', position: 'sticky', top: -50 }}>
             <h3>Thời gian còn lại</h3>
@@ -48,11 +48,11 @@ export default function ListQuestion() {
                             <Grid item xs={12} key={e.numberQuestion + '*'}>
                                 <h3 style={{ marginBlockEnd: 8 }}>Part 1</h3>
                             </Grid>
-                        ) : e.numberQuestion === 6 ? (
+                        ) : e.numberQuestion === 4 ? (
                             <Grid item xs={12}>
                                 <h3 style={{ marginBlockEnd: 8 }}>Part 2</h3>
                             </Grid>
-                        ) : e.numberQuestion === 11 ? (
+                        ) : e.numberQuestion === 7 ? (
                             <Grid item xs={12}>
                                 <h3 style={{ marginBlockEnd: 8 }}>Part 3</h3>
                             </Grid>
@@ -60,15 +60,15 @@ export default function ListQuestion() {
                             <Grid item xs={12}>
                                 <h3 style={{ marginBlockEnd: 8 }}>Part 4</h3>
                             </Grid>
-                        ) : e.numberQuestion === 21 ? (
+                        ) : e.numberQuestion === 25 ? (
                             <Grid item xs={12}>
                                 <h3 style={{ marginBlockEnd: 8 }}>Part 5</h3>
                             </Grid>
-                        ) : e.numberQuestion === 26 ? (
+                        ) : e.numberQuestion === 28 ? (
                             <Grid item xs={12}>
                                 <h3 style={{ marginBlockEnd: 8 }}>Part 6</h3>
                             </Grid>
-                        ) : e.numberQuestion === 31 ? (
+                        ) : e.numberQuestion === 40 ? (
                             <Grid item xs={12}>
                                 <h3 style={{ marginBlockEnd: 8 }}>Part 7</h3>
                             </Grid>

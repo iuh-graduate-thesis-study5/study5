@@ -10,7 +10,7 @@ import ReactApexChart from 'react-apexcharts';
 const barChartOptions = {
     chart: {
         type: 'bar',
-        height: 365,
+        height: 500,
         toolbar: {
             show: false
         }
@@ -23,61 +23,60 @@ const barChartOptions = {
     },
     dataLabels: {
         enabled: false
-    },
-    xaxis: {
-        categories: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
-        axisBorder: {
-            show: false
-        },
-        axisTicks: {
-            show: false
-        }
-    },
-    yaxis: {
-        show: false
-    },
-    grid: {
-        show: false
     }
 };
 
 // ==============================|| MONTHLY BAR CHART ||============================== //
 
-const MonthlyBarChart = () => {
-    const theme = useTheme();
-
-    const { primary, secondary } = theme.palette.text;
-    const info = theme.palette.info.light;
-
-    const [series] = useState([
-        {
-            data: [80, 95, 70, 42, 65, 55, 78]
-        }
-    ]);
-
+const MonthlyBarChart = ({ account }) => {
     const [options, setOptions] = useState(barChartOptions);
+    const [series, setSeries] = useState([44, 55, 20]);
+    useEffect(() => {
+        if (account) {
+            console.log(account);
+            let countStudent = 0;
+            let countTeacher = 0;
+            let countAdmin = 0;
+            account.forEach((e) => {
+                if (e.quyen === 'STUDENT') {
+                    countStudent += 1;
+                } else if (e.quyen === 'ADMIN') {
+                    countAdmin += 1;
+                } else {
+                    countTeacher += 1;
+                }
+            });
+            setSeries([countTeacher, countStudent, countAdmin]);
+        }
+    });
 
     useEffect(() => {
-        setOptions((prevState) => ({
-            ...prevState,
-            colors: [info],
-            xaxis: {
-                labels: {
-                    style: {
-                        colors: [secondary, secondary, secondary, secondary, secondary, secondary, secondary]
+        setOptions({
+            chart: {
+                width: 500,
+                type: 'pie'
+            },
+            labels: ['GIÁO VIÊN', 'HỌC SINH', 'ADMIN'],
+            responsive: [
+                {
+                    breakpoint: 480,
+                    options: {
+                        chart: {
+                            width: 400
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
                     }
                 }
-            },
-            tooltip: {
-                theme: 'light'
-            }
-        }));
+            ]
+        });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [primary, info, secondary]);
+    }, []);
 
     return (
-        <div id="chart">
-            <ReactApexChart options={options} series={series} type="bar" height={365} />
+        <div id="chart" style={{ height: '100%' }}>
+            <ReactApexChart options={options} series={series} type="pie" height={500} />
         </div>
     );
 };

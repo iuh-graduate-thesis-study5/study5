@@ -1,0 +1,18 @@
+.rs__event__item {
+    height: 38px !important;
+}
+.rs__header {
+    height: 40px !important;
+}
+.rs__time {
+    height: 40px !important;
+}
+
+.rs__event__item div {
+    box-shadow: none !important;
+}
+.calendar {
+    display: flex;
+    align-items: center;
+    padding: 20px 0;
+}

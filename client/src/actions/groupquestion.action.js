@@ -9,8 +9,6 @@ export const addGroupQuestion = (groupQuestion) => {
     return apiService.groupQuestion().addGroupQuestion(groupQuestion);
 };
 export const addAnswer = (answer) => (dispatch) => {
-    console.log('a');
-
     apiService
         .answer()
         .addAnswer(answer)

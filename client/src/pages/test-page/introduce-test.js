@@ -4,7 +4,20 @@ import poster from '../../assets/logo/introduce.png';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
 
+import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import * as actions from 'actions/exam.action';
+
 export default function TestIntroduce() {
+    const { id } = useParams();
+    const exam = useSelector((state) => state.exam.examById);
+    const dispatch = useDispatch();
+    useEffect(() => {
+        if (id) {
+            dispatch(actions.getExamById(id));
+        }
+    }, []);
     return (
         <div style={{ margin: '2rem 0' }}>
             <Grid container spacing={2}>
@@ -12,7 +25,7 @@ export default function TestIntroduce() {
                     <div>
                         <span>#TOEIC</span>
                     </div>
-                    <h1>ETS TOEIC 2022 Test 6</h1>
+                    <h1>{exam?.tieude}</h1>
                     <Chip
                         label="Thông tin đề thi"
                         color="primary"
@@ -20,19 +33,24 @@ export default function TestIntroduce() {
                     />
                     <div>
                         <span>
-                            <strong>Bộ đề thi: ETS TOEIC 2022</strong>
+                            <strong>Mã đề thi: {exam?.madethi}</strong>
                         </span>
                     </div>
                     <div>
                         <span>
-                            <b>Người ra đề:</b> Ms Nguyễn Thị Sơn Tùng
+                            <b>Người ra đề:</b> {exam?.taikhoan?.tentaikhoan}
                         </span>
                     </div>
                     <div>
                         <span>
-                            <b>Thời gian làm bài:</b> 120 phút
+                            <b>Thời gian làm bài:</b> 60 phút
                         </span>{' '}
-                        | <span>7 phần thi</span> | <span>200 câu hỏi</span>
+                        | <span>7 phần thi</span> | <span>52 câu hỏi</span>
+                    </div>
+                    <div>
+                        <span>
+                            <b>Mô tả:</b> {exam?.mota}
+                        </span>
                     </div>
                     <h3>Sơ lược bài thi</h3>
 
@@ -51,7 +69,7 @@ export default function TestIntroduce() {
                         TOEIC dựa trên các câu đúng rồi quy thành điểm tương ứng và không trừ điểm cho những câu sai.
                     </p>
                     <p>Mọi hành vi gian lận sẽ bị chúng tôi hủy kết quả ngay lập tức. Chúc các thí sinh có 1 buổi thi thành công</p>
-                    <Link to={'/home/do-exam'} style={{ textDecoration: 'none', color: 'black', width: '100%' }}>
+                    <Link to={'/home/do-exam/' + exam?.id} style={{ textDecoration: 'none', color: 'black', width: '100%' }}>
                         <Button variant="contained" size="large">
                             Làm bài thi ngay
                         </Button>
