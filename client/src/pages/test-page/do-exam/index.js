@@ -4,12 +4,26 @@ import Button from '@mui/material/Button';
 import TabPartExam from './TabPartExam';
 import ListQuestion from './ListQuestion';
 
+import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import * as actions from 'actions/exam.action';
+
 export default function DoExam() {
+    const { id } = useParams();
+    const exam = useSelector((state) => state.exam.examById);
+    const dispatch = useDispatch();
+    useEffect(() => {
+        if (id) {
+            dispatch(actions.getExamById(id));
+        }
+    }, []);
     return (
         <div style={{ margin: '2rem -7rem' }}>
             <div style={{ textAlign: 'center' }}>
                 <h2>ĐỀ THI ĐÁNH GIÁ NĂNG LỰC</h2>
-                <h4>ETS TOEIC 2022 Test 2</h4>
+                <h3 style={{ textTransform: 'uppercase' }}>{exam?.tieude}</h3>
+                <h4 style={{ textTransform: 'uppercase' }}>{exam?.madethi}</h4>
             </div>
             <Grid container spacing={2}>
                 <Grid
@@ -35,7 +49,7 @@ export default function DoExam() {
                         ></track>
                         Your browser does not support the audio element.
                     </audio>
-                    <TabPartExam />
+                    <TabPartExam exam={exam} />
                 </Grid>
                 <Grid item xs={0.2}></Grid>
                 <Grid

@@ -4,41 +4,55 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
+import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import * as action from 'actions/question.action';
+import { useDispatch } from 'react-redux';
 import 'css/question.css';
 
-export default function QuestionPart5() {
-    const listQuestion = [1, 2, 3, 4, 5, 6];
+export default function QuestionPart5({ question }) {
+    const dispatch = useDispatch();
+    const [listQuestion, setListQuestion] = useState([]);
+    const questions = useSelector((state) => state.question.listDefaultChoosenQuestion);
+
+    useEffect(() => {
+        setListQuestion(questions);
+    }, [questions]);
+    const chooseQuestion = (questionIndex, answer) => {
+        const question = {
+            numberQuestion: questionIndex + 1,
+            isChoosen: true,
+            answer: answer,
+            className: 'inputColorActive'
+        };
+        listQuestion.splice(questionIndex, 1, question);
+        dispatch(action.chooseQuestion(listQuestion));
+    };
     return (
         <>
-            {listQuestion.map((e) => (
-                <div style={{ margin: '1rem 0' }} key={e}>
+            {question?.map((e, i) => (
+                <div style={{ margin: '1rem 0' }} key={i}>
                     <div style={{ display: 'flex' }}>
                         <div>
-                            <strong className="number-question">{e}</strong>
+                            <strong className="number-question">{i + 25}</strong>
                         </div>
                         <div>
-                            <p style={{ fontSize: 16, marginTop: 3, marginBottom: 10 }}>
-                                Mougey Fine Gifts is known for its large range of _____ goods.
-                            </p>
-                            <input type="radio" id="html" name="fav_language" value="A" />
-                            <label htmlFor="A" style={{ fontSize: 16 }}>
-                                A. regional
-                            </label>
-                            <br />
-                            <input type="radio" id="css" name="fav_language" value="B" />
-                            <label htmlFor="B" style={{ fontSize: 16 }}>
-                                B. regionally
-                            </label>
-                            <br />
-                            <input type="radio" id="javascript" name="fav_language" value="C" />
-                            <label htmlFor="C" style={{ fontSize: 16 }}>
-                                C. region
-                            </label>
-                            <br />
-                            <input type="radio" id="javascript" name="fav_language" value="C" />
-                            <label htmlFor="D" style={{ fontSize: 16 }}>
-                                D. regions
-                            </label>
+                            <p style={{ fontSize: 16, marginTop: 3, marginBottom: 10 }}>{e?.nhomcauhoi?.noidungcauhoi}</p>
+                            {e?.nhomcauhoi?.cauhois[0].dapans.map((da) => (
+                                <>
+                                    <input
+                                        type="radio"
+                                        id={'q' + da.dapanthu}
+                                        name={'q5' + i + 25}
+                                        value={da.dapanthu}
+                                        onClick={() => chooseQuestion(i + 24, da.dapanthu)}
+                                    />
+                                    <label htmlFor={da.dapanthu} style={{ fontSize: 16 }}>
+                                        {da.dapanthu}. {da.noidung}
+                                    </label>
+                                    <br />
+                                </>
+                            ))}
                         </div>
                     </div>
                 </div>

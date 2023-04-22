@@ -1,4 +1,8 @@
 import UserTable from './UserTable';
+import ExamTable from './ExamTable';
+import TestExamTable from './TestExamTable';
+import DoneExam from './DoneExam';
+
 import AccountButtonComponent from './ActionButtonComponent';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -22,15 +26,19 @@ export default function AccountComponent() {
                 <TabContext value={value}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <TabList onChange={handleChange} aria-label="lab API tabs example">
-                            <Tab label="DANH SÁCH ĐỀ THI SẮP TỚI" value="1" />
-                            <Tab label="DANH SÁCH ĐỀ THI ĐÃ QUA" value="2" />
+                            <Tab label="DANH SÁCH ĐỀ THI SĂP TỚI" value="1" />4
+                            <Tab label="DANH SÁCH ĐỀ THI THỬ" value="2" />
+                            <Tab label="DANH SÁCH ĐỀ THI ĐÃ QUA" value="3" />
                         </TabList>
                     </Box>
                     <TabPanel value="1" style={{ padding: 0 }}>
-                        <UserTable />
+                        <ExamTable />
                     </TabPanel>
                     <TabPanel value="2" style={{ padding: 0 }}>
-                        <UserTable />
+                        <TestExamTable />
+                    </TabPanel>
+                    <TabPanel value="3" style={{ padding: 0 }}>
+                        <DoneExam />
                     </TabPanel>
                 </TabContext>
             </div>

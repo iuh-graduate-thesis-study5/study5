@@ -99,7 +99,7 @@ const rows = [
     createData('Oreo', 437, 18.0)
 ].sort((a, b) => (a.calories < b.calories ? -1 : 1));
 
-export default function AccountTable() {
+export default function AccountTable({ isAction }) {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
     const [listAccount, setListAccount] = useState([]);
@@ -169,7 +169,7 @@ export default function AccountTable() {
                             <TableCell>Tài khoản</TableCell>
                             <TableCell align="center">Quyền</TableCell>
                             <TableCell align="center">Trạng thái</TableCell>
-                            <TableCell></TableCell>
+                            {!isAction ? <TableCell></TableCell> : <></>}
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -195,11 +195,15 @@ export default function AccountTable() {
                                             <Chip label="Bị khóa" color="error" style={{ borderRadius: 30 }} />
                                         )}
                                     </TableCell>
-                                    <TableCell style={{ width: 160 }} align="center">
-                                        <IconButton aria-label="delete" size="large" onClick={() => handleClickOpen(row)}>
-                                            <EditIcon fontSize="inherit" color="primary" />
-                                        </IconButton>
-                                    </TableCell>
+                                    {!isAction ? (
+                                        <TableCell style={{ width: 160 }} align="center">
+                                            <IconButton aria-label="delete" size="large" onClick={() => handleClickOpen(row)}>
+                                                <EditIcon fontSize="inherit" color="primary" />
+                                            </IconButton>
+                                        </TableCell>
+                                    ) : (
+                                        <></>
+                                    )}
                                 </TableRow>
                             )
                         )}

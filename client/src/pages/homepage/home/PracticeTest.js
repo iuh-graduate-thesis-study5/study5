@@ -1,13 +1,12 @@
 import CardPractice from './CardPractice';
 import Grid from '@mui/material/Grid';
-export default function PracticeTest() {
-    const list = [1, 2, 3, 4, 5, 6, 7, 8];
+export default function PracticeTest({ listTestExam }) {
     return (
         <>
             <Grid container spacing={3}>
-                {list.map((e) => (
-                    <Grid item xs={3} key={e}>
-                        <CardPractice />
+                {listTestExam?.map((e, i) => (
+                    <Grid item xs={3} key={i}>
+                        <CardPractice listTestExam={e} />
                     </Grid>
                 ))}
             </Grid>

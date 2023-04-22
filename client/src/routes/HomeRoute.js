@@ -8,6 +8,8 @@ import HomeLayout from 'layout/HomeLayout';
 const Home = Loadable(lazy(() => import('pages/homepage/home')));
 const Testpage = Loadable(lazy(() => import('pages/test-page/introduce-test')));
 const DoExam = Loadable(lazy(() => import('pages/test-page/do-exam')));
+const MySchedule = Loadable(lazy(() => import('pages/schedule')));
+const ExamLibrary = Loadable(lazy(() => import('pages/exam-library')));
 
 // render - sample page
 const SamplePage = Loadable(lazy(() => import('pages/extra-pages/SamplePage')));
@@ -29,12 +31,20 @@ const HomeRoutes = {
             element: <Home />
         },
         {
-            path: 'room',
+            path: 'room/:id',
             element: <Testpage />
         },
         {
-            path: 'do-exam',
+            path: 'do-exam/:id',
             element: <DoExam />
+        },
+        {
+            path: 'my-schedule',
+            element: <MySchedule />
+        },
+        {
+            path: 'exams-library',
+            element: <ExamLibrary />
         }
     ]
 };

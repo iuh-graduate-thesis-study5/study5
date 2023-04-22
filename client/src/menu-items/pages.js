@@ -1,5 +1,13 @@
 // assets
-import { LoginOutlined, ProfileOutlined } from '@ant-design/icons';
+import {
+    LoginOutlined,
+    ProfileOutlined,
+    TeamOutlined,
+    UserOutlined,
+    ReconciliationOutlined,
+    QuestionCircleOutlined,
+    UserSwitchOutlined
+} from '@ant-design/icons';
 import GroupIcon from '@mui/icons-material/Group';
 import PersonIcon from '@mui/icons-material/Person';
 import BallotIcon from '@mui/icons-material/Ballot';
@@ -16,7 +24,11 @@ const icons = {
     BallotIcon,
     MenuBookIcon,
     AccountTreeIcon,
-    QuizIcon
+    QuizIcon,
+    TeamOutlined,
+    UserOutlined,
+    ReconciliationOutlined,
+    QuestionCircleOutlined
 };
 
 // ==============================|| MENU ITEMS - EXTRA PAGES ||============================== //
@@ -31,7 +43,7 @@ const pages = {
             title: 'Tài khoản',
             type: 'item',
             url: '/account',
-            icon: icons.PersonIcon,
+            icon: icons.UserOutlined,
             target: false
         },
         {
@@ -39,7 +51,7 @@ const pages = {
             title: 'Người dùng',
             type: 'item',
             url: '/user',
-            icon: icons.GroupIcon,
+            icon: icons.TeamOutlined,
             target: false
         },
         {
@@ -47,7 +59,7 @@ const pages = {
             title: 'Đề thi',
             type: 'item',
             url: '/exam',
-            icon: icons.BallotIcon,
+            icon: icons.ReconciliationOutlined,
             target: false
         },
         // {
@@ -71,7 +83,7 @@ const pages = {
             title: 'Câu hỏi',
             type: 'item',
             url: '/question',
-            icon: icons.QuizIcon,
+            icon: icons.QuestionCircleOutlined,
             target: false
         }
     ]

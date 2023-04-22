@@ -1,7 +1,7 @@
 import { ACTION_TYPES } from '../actions/question.action';
 
 const listChooseQuestion = [];
-for (let i = 1; i <= 35; i++) {
+for (let i = 1; i <= 51; i++) {
     const question = {
         numberQuestion: i,
         isChoosen: false,

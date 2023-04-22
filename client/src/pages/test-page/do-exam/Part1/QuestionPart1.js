@@ -11,8 +11,7 @@ import { useDispatch } from 'react-redux';
 
 import 'css/question.css';
 
-export default function QuestionPart1() {
-    const numberQuestion = [0, 1, 2, 3, 4, 5];
+export default function QuestionPart1({ question }) {
     const dispatch = useDispatch();
     const [listQuestion, setListQuestion] = useState([]);
     const questions = useSelector((state) => state.question.listDefaultChoosenQuestion);
@@ -32,47 +31,36 @@ export default function QuestionPart1() {
     };
     return (
         <>
-            {numberQuestion.map((e) => (
-                <div style={{ margin: '1rem 0' }} key={e}>
-                    <img src="https://study4.com/media/tez_media1/img/ets_toeic_2022_test_2_1.png" alt="cau1" />
+            {question?.map((e, i) => (
+                <div style={{ margin: '1rem 0' }} key={i}>
+                    <img src={e?.nhomcauhoi?.hinhanh} alt="cau1" />
                     <br />
+                    <audio controls style={{ margin: '1rem 0' }}>
+                        <source src={e?.nhomcauhoi?.amthanh} type="audio/mpeg" />
+                        <track src={e?.nhomcauhoi?.amthanh} kind="captions" srcLang="en" label="english_captions"></track>
+                        Your browser does not support the audio element.
+                    </audio>
                     <br />
                     <div style={{ display: 'flex' }}>
                         <div>
-                            <strong className="number-question">{e + 1}</strong>
+                            <strong className="number-question">{i + 1}</strong>
                         </div>
                         <div>
-                            <input type="radio" id="html" name={'fav_language' + e} value="A" onClick={() => chooseQuestion(e, 'A')} />
-                            <label htmlFor="A" style={{ fontSize: 16 }}>
-                                A.
-                            </label>
-                            <br />
-                            <input type="radio" id="css" name={'fav_language' + e} value="B" onClick={() => chooseQuestion(e, 'B')} />
-                            <label htmlFor="B" style={{ fontSize: 16 }}>
-                                B.
-                            </label>
-                            <br />
-                            <input
-                                type="radio"
-                                id="javascript"
-                                name={'fav_language' + e}
-                                value="C"
-                                onClick={() => chooseQuestion(e, 'C')}
-                            />
-                            <label htmlFor="C" style={{ fontSize: 16 }}>
-                                C.
-                            </label>
-                            <br />
-                            <input
-                                type="radio"
-                                id="javascript"
-                                name={'fav_language' + e}
-                                value="C"
-                                onClick={() => chooseQuestion(e, 'D')}
-                            />
-                            <label htmlFor="D" style={{ fontSize: 16 }}>
-                                D.
-                            </label>
+                            {e?.nhomcauhoi?.cauhois[0].dapans.map((da) => (
+                                <>
+                                    <input
+                                        type="radio"
+                                        id={'q' + da.dapanthu}
+                                        name={'fav_language' + e}
+                                        value={da.dapanthu}
+                                        onClick={() => chooseQuestion(i, da.dapanthu)}
+                                    />
+                                    <label htmlFor={da.dapanthu} style={{ fontSize: 16 }}>
+                                        {da.dapanthu}.
+                                    </label>
+                                    <br />
+                                </>
+                            ))}
                         </div>
                     </div>
                 </div>

@@ -24,6 +24,7 @@ import * as actions from 'actions/user.action';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import TableHead from '@mui/material/TableHead';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 function TablePaginationActions(props) {
     const theme = useTheme();
@@ -70,22 +71,13 @@ TablePaginationActions.propTypes = {
     rowsPerPage: PropTypes.number.isRequired
 };
 
-function createData(name, calories, fat) {
-    return { name, calories, fat };
-}
-
-export default function UserTable() {
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        dispatch(actions.getAllUser());
-    }, []);
-
-    const users = useSelector((state) => state.user.listUser);
+export default function UserTable({ lsUser, addStudent }) {
     const [listUser, setListUser] = useState([]);
     useEffect(() => {
-        setListUser(users);
-    }, [users]);
+        if (lsUser) {
+            setListUser(lsUser);
+        }
+    }, [lsUser]);
 
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(6);
@@ -103,38 +95,26 @@ export default function UserTable() {
     };
     return (
         <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+            <Table aria-label="custom pagination table">
                 <TableHead>
                     <TableRow>
-                        <TableCell>Tài khoản</TableCell>
-                        <TableCell align="right">Email</TableCell>
-                        <TableCell align="right">Giới tính</TableCell>
-                        <TableCell align="right">Số điện thoại</TableCell>
-                        <TableCell align="right">Địa chỉ</TableCell>
-                        <TableCell align="center">Hành động</TableCell>
+                        <TableCell align="left">Email</TableCell>
+                        <TableCell align="left">Họ tên</TableCell>
+                        <TableCell align="left">Giới tính</TableCell>
+                        <TableCell align="center"></TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {(rowsPerPage > 0 ? listUser.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : listUser).map((row) => (
                         <TableRow key={row.id}>
+                            <TableCell align="left">{row.email}</TableCell>
                             <TableCell component="th" scope="row">
                                 {row.tennguoidung}
                             </TableCell>
-                            <TableCell style={{ width: 160 }} align="right">
-                                {row.email}
-                            </TableCell>
-                            <TableCell style={{ width: 160 }} align="right">
-                                {row.gioitinh}
-                            </TableCell>
-                            <TableCell style={{ width: 160 }} align="right">
-                                {row.sodienthoai}
-                            </TableCell>
-                            <TableCell style={{ width: 160 }} align="right">
-                                {row.diachi}
-                            </TableCell>
-                            <TableCell style={{ width: 160 }} align="center">
+                            <TableCell align="left">{row.gioitinh}</TableCell>
+                            <TableCell align="center">
                                 <IconButton aria-label="edit" size="large">
-                                    <EditIcon fontSize="inherit" color="primary" />
+                                    <AddCircleOutlineIcon fontSize="inherit" color="primary" onClick={() => addStudent(row)} />
                                 </IconButton>
                             </TableCell>
                         </TableRow>
@@ -149,10 +129,10 @@ export default function UserTable() {
                 <TableFooter>
                     <TableRow>
                         <TablePagination
-                            rowsPerPageOptions={[6, 10, 25, { label: 'All', value: -1 }]}
+                            rowsPerPageOptions={[]}
                             colSpan={6}
                             count={listUser.length}
-                            labelRowsPerPage={'Số dòng trên 1 trang'}
+                            labelRowsPerPage={''}
                             rowsPerPage={rowsPerPage}
                             page={page}
                             SelectProps={{
