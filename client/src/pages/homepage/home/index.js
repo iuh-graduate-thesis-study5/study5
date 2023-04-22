@@ -10,7 +10,7 @@ export default function Home() {
         <>
             {/* <AccountButtonComponent /> */}
             <div>
-                <h1 style={{ color: '#35509a', marginTop: 50 }}>Xin chào, Thotran!</h1>
+                <h1 style={{ color: '#35509a', marginTop: 50 }}>Xin chào</h1>
                 <h2 style={{ color: '#35509a' }}>Lịch thi hôm nay</h2>
                 <p style={{ color: '#1a1a1a', fontSize: 16 }}>
                     <i>
