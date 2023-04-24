@@ -24,7 +24,9 @@ export default function QuestionPart4({ question }) {
             numberQuestion: questionIndex + 1,
             isChoosen: true,
             answer: answer,
-            className: 'inputColorActive'
+            className: 'inputColorActive',
+            dap_an_dung: listQuestion[questionIndex].dap_an_dung,
+            id_question: listQuestion[questionIndex].id_question
         };
         listQuestion.splice(questionIndex, 1, question);
         dispatch(action.chooseQuestion(listQuestion));
@@ -39,14 +41,14 @@ export default function QuestionPart4({ question }) {
                         Your browser does not support the audio element.
                     </audio>
                     {e?.nhomcauhoi?.cauhois?.map((nch, ind) => (
-                        <div style={{ display: 'flex' }}>
+                        <div style={{ display: 'flex' }} key={ind}>
                             <div>
                                 <strong className="number-question">{numberQuestion[i * 3 + ind]}</strong>
                             </div>
                             <div>
                                 <p style={{ fontSize: 16, marginTop: 3, marginBottom: 10 }}>{nch?.noidung}</p>
-                                {nch?.dapans.map((da) => (
-                                    <>
+                                {nch?.dapans.map((da, idx) => (
+                                    <React.Fragment key={idx}>
                                         <input
                                             type="radio"
                                             id={'q' + da.dapanthu}
@@ -58,7 +60,7 @@ export default function QuestionPart4({ question }) {
                                             {da?.dapanthu}. {da.noidung}
                                         </label>
                                         <br />
-                                    </>
+                                    </React.Fragment>
                                 ))}
                                 <br></br>
                             </div>

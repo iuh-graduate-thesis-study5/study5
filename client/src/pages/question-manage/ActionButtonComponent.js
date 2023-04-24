@@ -469,7 +469,6 @@ export default function AccountButtonComponent() {
     };
     const handelSubmitForm = () => {
         if (!validate()) {
-            console.log('s');
             return;
         }
         const nhomCauhoi = {
@@ -526,7 +525,6 @@ export default function AccountButtonComponent() {
                         .then((response) => {
                             for (let ans = 0; ans < answerLength; ans++) {
                                 setTimeout(() => {
-                                    console.log('b');
                                     dispatch(
                                         groupQuestionActions.addAnswer({
                                             noidung: values[`question_${i}_${listAnswerAlpha[ans]}`],

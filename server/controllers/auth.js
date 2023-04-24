@@ -1,5 +1,7 @@
 import { db } from '../db.js';
 import bcrypt from 'bcryptjs';
+import { taikhoan } from '../entity/Account.js';
+import { nguoidung } from '../entity/User.js';
 import jwt from 'jsonwebtoken';
 
 export const register = (req, res) => {
@@ -81,4 +83,24 @@ export const updateAccount = (req, res) => {
         if (err) return res.status(500).json(err);
         return getAllAccount(req, res);
     });
+};
+
+export const getAccount = (req, res) => {
+    taikhoan
+        .findOne({
+            include: [
+                {
+                    model: nguoidung
+                }
+            ],
+            where: {
+                id: req.params.id
+            }
+        })
+        .then((exam) => {
+            return res.status(200).json(exam);
+        })
+        .catch((err) => {
+            return res.status(400).json({ err });
+        });
 };

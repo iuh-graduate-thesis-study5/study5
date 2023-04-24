@@ -19,6 +19,7 @@ const ProfileTab = ({ handleLogout }) => {
         setSelectedIndex(index);
     };
     const Logout = () => {
+        localStorage.removeItem('authenticate');
         navigate('/login');
     };
     const handleChangHome = () => {

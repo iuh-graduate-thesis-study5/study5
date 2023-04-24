@@ -55,21 +55,15 @@ const AuthLogin = () => {
             matkhau: password
         };
         actions.login(account).then((res) => {
-            console.log(account);
-            // if (res && res.data.taiKhoanid?.trangThai === 2) {
-            //     navigate('/block-account');
-            // } else if (res && res.data.id && res.data.taiKhoanid?.trangThai === 1) {
-            //     const permission = {
-            //         account_id: res.data.taiKhoanid.id,
-            //         user_id: res.data.id,
-            //         user_name: res.data.ho + ' ' + res.data.ten,
-            //         role: res.data.taiKhoanid.quyen
-            //     };
-
-            //     dispatch(actions.isAuthenticated(permission));
-            if (res && res.data[0]?.id) {
+            if (res && res.data[0]?.id && res.data[0]?.trangthai === 1) {
+                const user = {
+                    id: res.data[0]?.id,
+                    role: res.data[0]?.quyen
+                };
+                localStorage.setItem('authenticate', JSON.stringify(user));
                 setIsDisplay(false);
-                navigate('/');
+                if (res.data[0]?.quyen === 'STUDENT') navigate('/home');
+                else navigate('/');
             } else {
                 setIsDisplay(true);
             }

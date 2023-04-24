@@ -16,14 +16,18 @@ import { Link } from 'react-router-dom';
 import logo from '../../../assets/logo/logo.png';
 import { ProfileOutlined, LogoutOutlined, ReconciliationOutlined } from '@ant-design/icons';
 
+const logOut = () => {
+    localStorage.removeItem('authenticate');
+};
+
 const pages = [
     { text: 'Trang chủ', link: '/home' },
     { text: 'Thư viện đề thi', link: '/home/exams-library' }
 ];
 const settings = [
-    { text: 'Thông tin cá nhân', icon: <ProfileOutlined />, link: '/user-detail' },
-    { text: 'Trang quản lý', icon: <ReconciliationOutlined />, link: '/' },
-    { text: 'Đăng xuất', icon: <LogoutOutlined />, link: '/login' }
+    { text: 'Thông tin cá nhân', icon: <ProfileOutlined />, link: '/user-detail', onClick: null },
+    { text: 'Trang quản lý', icon: <ReconciliationOutlined />, link: '/', onClick: null },
+    { text: 'Đăng xuất', icon: <LogoutOutlined />, link: '/login', onClick: logOut }
 ];
 
 function ResponsiveAppBar() {
@@ -100,7 +104,12 @@ function ResponsiveAppBar() {
                             onClose={handleCloseUserMenu}
                         >
                             {settings.map((setting) => (
-                                <Link key={setting.link} to={setting.link} style={{ textDecoration: 'none', color: 'black' }}>
+                                <Link
+                                    key={setting.link}
+                                    to={setting.link}
+                                    onClick={setting.onClick}
+                                    style={{ textDecoration: 'none', color: 'black' }}
+                                >
                                     <MenuItem onClick={handleCloseUserMenu}>
                                         {setting.icon} &nbsp;&nbsp;
                                         <Typography style={{ color: 'black' }} textAlign="center">

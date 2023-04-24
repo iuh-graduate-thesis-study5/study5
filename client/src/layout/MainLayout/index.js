@@ -11,7 +11,7 @@ import Drawer from './Drawer';
 import Header from './Header';
 import navigation from 'menu-items';
 import Breadcrumbs from 'components/@extended/Breadcrumbs';
-
+import { useNavigate } from 'react-router-dom';
 // types
 import { openDrawer } from 'store/reducers/menu';
 
@@ -19,9 +19,12 @@ import { openDrawer } from 'store/reducers/menu';
 
 const MainLayout = () => {
     const theme = useTheme();
+    const navigate = useNavigate();
     const matchDownLG = useMediaQuery(theme.breakpoints.down('xl'));
     const dispatch = useDispatch();
-
+    if (!localStorage.getItem('authenticate')) {
+        navigate('/login');
+    }
     const { drawerOpen } = useSelector((state) => state.menu);
 
     // drawer toggler

@@ -8,11 +8,33 @@ import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from 'actions/exam.action';
+import * as action from 'actions/question.action';
 
 export default function DoExam() {
     const { id } = useParams();
     const exam = useSelector((state) => state.exam.examById);
     const dispatch = useDispatch();
+    useEffect(() => {
+        if (exam) {
+            const listCorrectAnswer = [];
+            let count = 1;
+            exam?.dethicauhois?.forEach((ex) => {
+                ex?.nhomcauhoi?.cauhois?.forEach((ch) => {
+                    const question = {
+                        numberQuestion: count,
+                        isChoosen: false,
+                        answer: '',
+                        className: 'inputColor',
+                        dap_an_dung: ch.dapandung,
+                        id_question: ch.id
+                    };
+                    count = count + 1;
+                    listCorrectAnswer.push(question);
+                });
+            });
+            dispatch(action.chooseQuestion(listCorrectAnswer));
+        }
+    }, [exam]);
     useEffect(() => {
         if (id) {
             dispatch(actions.getExamById(id));

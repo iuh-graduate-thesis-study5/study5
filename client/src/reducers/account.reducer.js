@@ -1,10 +1,13 @@
 import { ACTION_TYPES } from '../actions/account.action';
 
+const userAuth = JSON.parse(localStorage.getItem('authenticate')).id;
+
 const initialState = {
     isAuthenticated: null,
     listAccount: [],
     account: null,
-    hashPass: null
+    hashPass: null,
+    userAuth: userAuth
 };
 
 export const accountReducer = (state = initialState, action) => {
@@ -23,6 +26,11 @@ export const accountReducer = (state = initialState, action) => {
             return {
                 ...state,
                 listAccount: [...action.payload]
+            };
+        case ACTION_TYPES.GET_ACCOUNT:
+            return {
+                ...state,
+                account: action.payload
             };
         default:
             return state;

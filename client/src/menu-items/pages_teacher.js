@@ -34,27 +34,11 @@ const icons = {
 
 // ==============================|| MENU ITEMS - EXTRA PAGES ||============================== //
 
-const pages = {
+const page_teacher = {
     id: 'authentication',
     title: 'Quản lý',
     type: 'group',
     children: [
-        {
-            id: 'quanlytaikhoan',
-            title: 'Tài khoản',
-            type: 'item',
-            url: '/account',
-            icon: icons.UserOutlined,
-            target: false
-        },
-        {
-            id: 'quanlynguoidung',
-            title: 'Người dùng',
-            type: 'item',
-            url: '/user',
-            icon: icons.TeamOutlined,
-            target: false
-        },
         {
             id: 'dethi',
             title: 'Đề thi',
@@ -74,4 +58,4 @@ const pages = {
     ]
 };
 
-export default pages;
+export default page_teacher;

@@ -33,7 +33,6 @@ const PieChartExam = ({ account }) => {
     const [series, setSeries] = useState([44, 55, 20]);
     useEffect(() => {
         if (account) {
-            console.log(account);
             let countStudent = 0;
             let countTeacher = 0;
             let countAdmin = 0;

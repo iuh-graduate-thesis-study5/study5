@@ -8,6 +8,7 @@ export default {
             fetchAll: () => axios.get(url + 'get-all-account'),
             login: (account) => axios.post(url + 'login', account),
             register: (account) => axios.post(url + 'register', account),
+            getAccount: (id) => axios.get(url + 'get-account/' + id),
             editAccount: (account, id) => axios.put(url + id, account)
         };
     },
@@ -41,9 +42,15 @@ export default {
     },
     exam(url = baseApi + 'exam/') {
         return {
-            getAllExam: () => axios.get(url + '/get-exam'),
-            getExamById: (id) => axios.get(url + '/get-exam-by-id/' + id),
-            createExam: (exam) => axios.post(url + '/generate-exam', exam)
+            getAllExam: () => axios.get(url + 'get-exam'),
+            getExamById: (id) => axios.get(url + 'get-exam-by-id/' + id),
+            createExam: (exam) => axios.post(url + 'generate-exam', exam)
+        };
+    },
+    result(url = baseApi + 'result/') {
+        return {
+            createResult: (rs) => axios.post(url + 'add-result', rs),
+            getResult: (id) => axios.get(url + 'get-result/' + id)
         };
     }
 };

@@ -11,7 +11,6 @@ import Chip from '@mui/material/Chip';
 export default function QuestionPart6({ detailGroupQuestion }) {
     const listQuestion = [1];
     const listGroupQuestion = [1, 2, 3, 4];
-    console.log(detailGroupQuestion);
     return (
         <>
             <Chip label="#Part 6" color="primary" />
