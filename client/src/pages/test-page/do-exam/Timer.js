@@ -2,13 +2,15 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import moment from 'moment';
 
-const Timer = () => {
-    const a = new Date('2023-04-23 12:50:28');
+const Timer = ({ beginTime }) => {
+    const a = new Date(beginTime);
     const newDateObj = moment(a).add(60, 'm').toDate();
-
     const startTime = new Date();
-    const endTime = newDateObj;
-    const difference = endTime.getTime() - startTime.getTime();
+    const endTime = new Date(newDateObj);
+    let difference = endTime.getTime() - startTime.getTime();
+    if (!difference) {
+        difference = 0;
+    }
     const resultInMinutes = difference / 60000;
     const resultSecond = Math.round((resultInMinutes % 1) * 60);
     const [minutes, setMinutes] = useState(Math.round(resultInMinutes));

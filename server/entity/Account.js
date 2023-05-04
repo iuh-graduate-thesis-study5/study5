@@ -14,6 +14,8 @@ export const taikhoan = sequelize.define(
         tentaikhoan: Sequelize.STRING,
         matkhau: Sequelize.STRING,
         trangthai: Sequelize.INTEGER,
+        quyen: Sequelize.STRING,
+        avatar: Sequelize.STRING,
         id_nguoidung: Sequelize.INTEGER
     },
     { timestamps: false, sequelize, modelName: 'taikhoan' }

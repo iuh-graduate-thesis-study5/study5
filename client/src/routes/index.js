@@ -7,16 +7,25 @@ import MainRoutes from './MainRoutes';
 import ManageRoutes from './ManageRoutes';
 import HomeRoutes from './HomeRoute';
 import NotFoundRoute from './NotFound';
-
+import { useDispatch, useSelector } from 'react-redux';
+import * as actions from 'actions/account.action';
 // ==============================|| ROUTING RENDER ||============================== //
 
 export default function ThemeRoutes() {
-    let listRoute = [MainRoutes, LoginRoutes, ManageRoutes, HomeRoutes, NotFoundRoute];
-    if (localStorage.getItem('authenticate')) {
-        let a = JSON.parse(localStorage.getItem('authenticate'));
-        if (a.role === 'STUDENT') {
-            listRoute = [LoginRoutes, HomeRoutes, NotFoundRoute];
+    const dispatch = useDispatch();
+    const [listRoute, setListRoute] = useState([MainRoutes, LoginRoutes, ManageRoutes, HomeRoutes, NotFoundRoute]);
+    const account = useSelector((state) => state.account.account);
+    const user_id = useSelector((state) => state.account.userAuth);
+
+    useEffect(() => {
+        if (user_id) {
+            dispatch(actions.getAccount(user_id));
         }
-    }
+    }, [user_id]);
+    useEffect(() => {
+        if (account && account.quyen === 'STUDENT') {
+            setListRoute([LoginRoutes, HomeRoutes, NotFoundRoute]);
+        }
+    }, [account]);
     return useRoutes(listRoute);
 }

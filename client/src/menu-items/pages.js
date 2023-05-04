@@ -35,7 +35,7 @@ const icons = {
 // ==============================|| MENU ITEMS - EXTRA PAGES ||============================== //
 
 const pages = {
-    id: 'authentication',
+    id: 'manage',
     title: 'Quản lý',
     type: 'group',
     children: [

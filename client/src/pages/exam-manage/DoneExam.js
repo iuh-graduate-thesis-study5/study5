@@ -83,7 +83,17 @@ export default function DoneExam() {
     }, []);
     useEffect(() => {
         if (exams) {
-            setListExam(exams.filter((item) => item.loaidethi === 0));
+            if (exams) {
+                const listNowExam = [];
+                exams.forEach((e) => {
+                    var date = Date.now();
+                    const newDateObj = moment(e.thoigianthi).add(60, 'm').toDate();
+                    if (moment(date).isAfter(newDateObj)) {
+                        listNowExam.push(e);
+                    }
+                    setListExam(listNowExam);
+                });
+            }
         }
     }, [exams]);
 

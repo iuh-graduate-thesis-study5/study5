@@ -28,34 +28,20 @@ const barChartOptions = {
 
 // ==============================|| MONTHLY BAR CHART ||============================== //
 
-const PieChartExam = ({ account }) => {
+const PieChartExam = ({ listChart }) => {
     const [options, setOptions] = useState(barChartOptions);
     const [series, setSeries] = useState([44, 55, 20]);
     useEffect(() => {
-        if (account) {
-            let countStudent = 0;
-            let countTeacher = 0;
-            let countAdmin = 0;
-            account.forEach((e) => {
-                if (e.quyen === 'STUDENT') {
-                    countStudent += 1;
-                } else if (e.quyen === 'ADMIN') {
-                    countAdmin += 1;
-                } else {
-                    countTeacher += 1;
-                }
-            });
-            setSeries([countTeacher, countStudent, countAdmin]);
-        }
-    });
-
+        setSeries(listChart);
+    }, [listChart]);
+    console.log(series);
     useEffect(() => {
         setOptions({
             chart: {
                 width: 500,
                 type: 'pie'
             },
-            labels: ['GIÁO VIÊN', 'HỌC SINH', 'ADMIN'],
+            labels: ['Kém', 'Khá', 'Giỏi'],
             responsive: [
                 {
                     breakpoint: 480,
@@ -75,7 +61,7 @@ const PieChartExam = ({ account }) => {
 
     return (
         <div id="chart" style={{ height: '100%' }}>
-            <ReactApexChart options={options} series={series} type="pie" height={500} />
+            <ReactApexChart key={JSON.stringify(series)} options={options} series={series} type="pie" height={500} />
         </div>
     );
 };

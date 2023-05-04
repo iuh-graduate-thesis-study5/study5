@@ -7,6 +7,7 @@ import fs from 'fs';
 import { dethicauhoi } from '../entity/ExamQuestion.js';
 import { dethithisinh } from '../entity/AccountQuestion.js';
 import { taikhoan } from '../entity/Account.js';
+import { nguoidung } from '../entity/User.js';
 
 export const generateExam = (req, res) => {
     const today = new Date();
@@ -122,7 +123,12 @@ export const getExamById = (req, res) => {
         .findOne({
             include: [
                 {
-                    model: taikhoan
+                    model: taikhoan,
+                    include: [
+                        {
+                            model: nguoidung
+                        }
+                    ]
                 },
                 {
                     model: dethicauhoi,
@@ -155,6 +161,50 @@ export const getExamById = (req, res) => {
             ],
             where: {
                 id: req.params.id
+            }
+        })
+        .then((exam) => {
+            return res.status(200).json(exam);
+        })
+        .catch((err) => {
+            return res.status(400).json({ err });
+        });
+};
+
+export const getExamByUserId = (req, res) => {
+    dethi
+        .findAll({
+            include: [
+                {
+                    model: taikhoan
+                },
+                {
+                    model: dethithisinh,
+                    include: [
+                        {
+                            model: taikhoan
+                        }
+                    ],
+                    where: {
+                        id_thisinh: req.params.id
+                    }
+                }
+            ]
+        })
+        .then((exam) => {
+            return res.status(200).json(exam);
+        })
+        .catch((err) => {
+            return res.status(400).json({ err });
+        });
+};
+export const getExamUser = (req, res) => {
+    console.log(req);
+    dethithisinh
+        .findOne({
+            where: {
+                id_dethi: req.body.id_dethi,
+                id_thisinh: req.body.id_thisinh
             }
         })
         .then((exam) => {

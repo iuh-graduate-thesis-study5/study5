@@ -31,7 +31,6 @@ export default function QuestionPart1({ question }) {
         listQuestion.splice(questionIndex, 1, question);
         dispatch(action.chooseQuestion(listQuestion));
     };
-    console.log(questions);
     return (
         <>
             {question?.map((e, i) => (

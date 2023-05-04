@@ -6,11 +6,13 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
+import { Link } from 'react-router-dom';
+
 import moment from 'moment';
 
 export default function CardExam({ result }) {
     return (
-        <Card sx={{ minWidth: 275 }}>
+        <Card>
             <CardContent>
                 <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                     {result?.dethithisinh?.dethi?.madethi + '-' + result?.dethithisinh?.dethi?.tieude}
@@ -37,7 +39,9 @@ export default function CardExam({ result }) {
                 </Typography>
             </CardContent>
             <CardActions>
-                <Button size="small">Xem chi tiết</Button>
+                <Link to={'/home/result-exam/' + result?.id} style={{ textDecoration: 'none', color: 'black', width: '100%' }}>
+                    <Button size="small">Xem chi tiết</Button>
+                </Link>
             </CardActions>
         </Card>
     );

@@ -3,7 +3,9 @@ import apiService from '../services/api.service';
 export const ACTION_TYPES = {
     FETCH_ALL_EXAM: 'FETCH_ALL_EXAM',
     CREATE: 'CREATE',
-    FIND_BY_ID: 'FIND_BY_ID'
+    FIND_BY_ID: 'FIND_BY_ID',
+    FIND_BY_USER_ID: 'FIND_BY_USER_ID',
+    GET_EXAM_USER_ID: 'GET_EXAM_USER_ID'
 };
 
 export const getAllExam = () => (dispatch) => {
@@ -42,4 +44,21 @@ export const getExamById = (id) => (dispatch) => {
             });
         })
         .catch((err) => console.log(err));
+};
+
+export const getExamByUserId = (id) => (dispatch) => {
+    apiService
+        .exam()
+        .getExamByUserId(id)
+        .then((response) => {
+            dispatch({
+                type: ACTION_TYPES.FIND_BY_USER_ID,
+                payload: response.data
+            });
+        })
+        .catch((err) => console.log(err));
+};
+export const getExamUserId = (ids) => {
+    console.log(ids);
+    return apiService.exam().getExamUserId(ids);
 };

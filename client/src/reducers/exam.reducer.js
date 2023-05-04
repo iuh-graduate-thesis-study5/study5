@@ -2,7 +2,9 @@ import { ACTION_TYPES } from '../actions/exam.action';
 
 const initialState = {
     listExam: [],
-    examById: {}
+    examById: {},
+    listExamByUserId: [],
+    examUserId: {}
 };
 
 export const examReducer = (state = initialState, action) => {
@@ -21,6 +23,11 @@ export const examReducer = (state = initialState, action) => {
             return {
                 ...state,
                 examById: action.payload
+            };
+        case ACTION_TYPES.FIND_BY_USER_ID:
+            return {
+                ...state,
+                listExamByUserId: [...action.payload]
             };
         default:
             return state;

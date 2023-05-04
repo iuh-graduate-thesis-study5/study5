@@ -29,7 +29,6 @@ import { useDispatch } from 'react-redux';
 import FirebaseSocial from './FirebaseSocial';
 import AnimateButton from 'components/@extended/AnimateButton';
 import { useNavigate } from 'react-router-dom';
-
 // assets
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 
@@ -37,6 +36,7 @@ import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 
 const AuthLogin = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [checked, setChecked] = React.useState(false);
     const [showPassword, setShowPassword] = React.useState(false);
     const [password, setPassword] = React.useState('');
@@ -60,7 +60,7 @@ const AuthLogin = () => {
                     id: res.data[0]?.id,
                     role: res.data[0]?.quyen
                 };
-                localStorage.setItem('authenticate', JSON.stringify(user));
+                dispatch(actions.isAuthenticated(res.data[0].id));
                 setIsDisplay(false);
                 if (res.data[0]?.quyen === 'STUDENT') navigate('/home');
                 else navigate('/');

@@ -22,7 +22,7 @@ const MainLayout = () => {
     const navigate = useNavigate();
     const matchDownLG = useMediaQuery(theme.breakpoints.down('xl'));
     const dispatch = useDispatch();
-    if (!localStorage.getItem('authenticate')) {
+    if (!localStorage.getItem('user_authenticated')) {
         navigate('/login');
     }
     const { drawerOpen } = useSelector((state) => state.menu);

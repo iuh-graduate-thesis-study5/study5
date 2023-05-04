@@ -104,3 +104,20 @@ export const getAccount = (req, res) => {
             return res.status(400).json({ err });
         });
 };
+export const uploadAccount = (req, res) => {
+    taikhoan
+        .update(req.body, { where: { id: req.params.id } })
+        .then((users) => {
+            nguoidung
+                .update(req.body, { where: { id: req.params.user_id } })
+                .then((users) => {
+                    return getAccount(req, res);
+                })
+                .catch((err) => {
+                    return res.status(400).json({ err });
+                });
+        })
+        .catch((err) => {
+            return res.status(400).json({ err });
+        });
+};

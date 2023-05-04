@@ -2,11 +2,41 @@ import { Scheduler } from '@aldabil/react-scheduler';
 import { EVENTS } from './events';
 import { Button } from '@mui/material';
 import vi from 'date-fns/locale/vi';
-import 'css/scheldule.css';
+import * as actions from 'actions/exam.action';
+import { useDispatch, useSelector } from 'react-redux';
+// import 'css/scheldule.css';
+import { useEffect, useState } from 'react';
 export default function UserScheduler() {
+    const user_id = useSelector((state) => state.account.userAuth);
+    const examByUserId = useSelector((state) => state.exam.listExamByUserId);
+    const [listExam, setListExam] = useState([]);
+    const dispatch = useDispatch();
+    useEffect(() => {
+        if (user_id) {
+            dispatch(actions.getExamByUserId(user_id));
+        }
+    }, [user_id]);
+    useEffect(() => {
+        if (examByUserId) {
+            const listEvent = [];
+            examByUserId?.forEach((e, i) => {
+                let event = {
+                    event_id: i,
+                    title: e.tieude,
+                    start: new Date(e.thoigianthi).setMinutes(0),
+                    end: new Date(new Date(e.thoigianthi).setHours(new Date(e.thoigianthi).getHours() + 1)).setMinutes(0),
+                    disabled: false
+                };
+                listEvent.push(event);
+            });
+            setListExam(listEvent);
+        }
+    }, [examByUserId]);
+
     return (
         <Scheduler
-            events={EVENTS}
+            key={JSON.stringify(listExam)}
+            events={listExam}
             view="week"
             locale={vi}
             day={null}
@@ -29,11 +59,6 @@ export default function UserScheduler() {
                         }}
                     >
                         <div style={{ fontSize: 11 }}>{event.event.title}</div>
-                        {/* <div style={{ fontSize: 11 }}>
-                            {event.event.start.toLocaleTimeString(vi, {
-                                timeStyle: 'short'
-                            }) + '- Thời gian 60p'}
-                        </div> */}
                     </div>
                 );
             }}
@@ -42,31 +67,7 @@ export default function UserScheduler() {
                 weekStartOn: 1,
                 startHour: 7,
                 endHour: 18,
-                step: 60,
-                cellRenderer: ({ height, start, onClick, ...props }) => {
-                    // Fake some condition up
-                    const hour = start.getHours();
-                    const disabled = hour === 14;
-                    const restProps = disabled ? {} : props;
-                    // return (
-                    //     <Button
-                    //         style={{
-                    //             height: '50%',
-                    //             background: disabled ? '#eee' : 'transparent',
-                    //             cursor: disabled ? 'not-allowed' : 'pointer'
-                    //         }}
-                    //         onClick={() => {
-                    //             if (disabled) {
-                    //                 return alert('Opss');
-                    //             }
-                    //             onClick();
-                    //         }}
-                    //         disableRipple={disabled}
-                    //         // disabled={disabled}
-                    //         {...restProps}
-                    //     ></Button>
-                    // );
-                }
+                step: 60
             }}
         />
     );

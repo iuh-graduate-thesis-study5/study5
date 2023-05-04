@@ -1,4 +1,7 @@
+import { where } from 'sequelize';
 import { db } from '../db.js';
+import { nguoidung } from '../entity/User.js';
+import { getAccount } from './auth.js';
 
 export const getUser = (req, res) => {
     //CHECK USER

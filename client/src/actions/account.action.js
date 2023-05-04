@@ -5,7 +5,21 @@ export const ACTION_TYPES = {
     REGISTER: 'REGISTER',
     UPDATE_ACCOUNT: 'UPDATE_ACCOUNT',
     GET_ACCOUNT: 'GET_ACCOUNT',
-    AUTHENTICATE_SIGNAL: 'AUTHENTICATE_SIGNAL'
+    AUTHENTICATE_SIGNAL: 'AUTHENTICATE_SIGNAL',
+    LOGOUT: 'LOGOUT',
+    UPDATE_ACCOUNT_USER: 'UPDATE_ACCOUNT_USER'
+};
+export const isAuthenticated = (userExitedid) => {
+    return {
+        type: ACTION_TYPES.AUTHENTICATE_SIGNAL,
+        userExitedid: userExitedid
+    };
+};
+export const Logout = () => {
+    localStorage.removeItem('user_authenticated');
+    return {
+        type: ACTION_TYPES.AUTHENTICATE_SIGNAL
+    };
 };
 export const test = () => (dispatch) => {
     apiService
@@ -55,6 +69,19 @@ export const getAccount = (id) => (dispatch) => {
         .then((response) => {
             dispatch({
                 type: ACTION_TYPES.GET_ACCOUNT,
+                payload: response.data
+            });
+        })
+        .catch((err) => console.log(err));
+};
+
+export const updateAccountInfo = (account, id, id_user) => (dispatch) => {
+    apiService
+        .account()
+        .updateAccount(account, id, id_user)
+        .then((response) => {
+            dispatch({
+                type: ACTION_TYPES.UPDATE_ACCOUNT_USER,
                 payload: response.data
             });
         })

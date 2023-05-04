@@ -25,6 +25,7 @@ import iconwoman from '../../assets/user/icon-women.png';
 import Badge from '@mui/material/Badge';
 import SyncAltIcon from '@mui/icons-material/SyncAlt';
 import * as examAction from 'actions/exam.action';
+import { useEffect, useState } from 'react';
 import 'css/exam.css';
 const initialFieldValues = {
     tieude: '',
@@ -38,6 +39,14 @@ export default function AccountButtonComponent() {
     const [listUser, setListUser] = React.useState([]);
     const [listStudent, setListStudent] = React.useState([]);
     const [type, setType] = React.useState(0);
+    const account = useSelector((state) => state.account.account);
+    const user_id = useSelector((state) => state.account.userAuth);
+
+    useEffect(() => {
+        if (user_id) {
+            dispatch(action.getAccount(user_id));
+        }
+    }, [user_id]);
     React.useEffect(() => {
         dispatch(action.test());
     }, []);
@@ -66,6 +75,7 @@ export default function AccountButtonComponent() {
     };
 
     const handleClose = () => {
+        resetForm();
         setOpen(false);
     };
     const handleSubmit = () => {
@@ -94,6 +104,7 @@ export default function AccountButtonComponent() {
         values.loaidethi = type;
         values.listStudent = listIdStudent;
         dispatch(examAction.generateExam(values));
+        handleClose();
     };
     return (
         <div style={{ margin: '1rem 0' }}>
@@ -128,9 +139,9 @@ export default function AccountButtonComponent() {
                                     name="tennguoidung"
                                     type="text"
                                     autoComplete="off"
-                                    InputProps={{ inputProps: { min: 0, max: 20 } }}
+                                    InputProps={{ inputProps: { min: 0, max: 20, readOnly: true } }}
                                     fullWidth
-                                    value={values.tennguoidung || ''}
+                                    value={account?.nguoidung?.tennguoidung}
                                     onChange={handleInputChange}
                                     {...(errors.tennguoidung && { error: true, helperText: errors.tennguoidung })}
                                 />
@@ -213,15 +224,7 @@ export default function AccountButtonComponent() {
                             )}
                         </Grid>
                         <br></br>
-                        <Button
-                            fullWidth
-                            size="large"
-                            variant="contained"
-                            color="primary"
-                            type="submit"
-                            onClick={generateExam}
-                            // style={{ display: displayButton }}
-                        >
+                        <Button fullWidth size="large" variant="contained" color="primary" type="submit" onClick={generateExam}>
                             TẠO ĐỀ THI
                         </Button>
                     </Formsy>

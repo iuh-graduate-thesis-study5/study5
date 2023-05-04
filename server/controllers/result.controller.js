@@ -9,6 +9,7 @@ import { dethithisinh } from '../entity/AccountQuestion.js';
 import { taikhoan } from '../entity/Account.js';
 import { ketqua } from '../entity/Result.js';
 import { cautraloi } from '../entity/ResultAnswer.js';
+import { nguoidung } from '../entity/User.js';
 
 export const addResult = (req, res) => {
     const listAnswer = req.body;
@@ -30,7 +31,7 @@ export const addResult = (req, res) => {
         socausai: wrongAnswer,
         socauboqua: skipAnswer,
         thoigiannopbai: Date.now(),
-        id_dethiketqua: 25
+        id_dethiketqua: req.params.id
     };
     ketqua
         .create(rs)
@@ -64,6 +65,22 @@ export const getResult = (req, res) => {
         .findOne({
             include: [
                 {
+                    model: dethithisinh,
+                    include: [
+                        {
+                            model: dethi
+                        },
+                        {
+                            model: taikhoan,
+                            include: [
+                                {
+                                    model: nguoidung
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
                     model: cautraloi,
                     include: [
                         {
@@ -81,6 +98,72 @@ export const getResult = (req, res) => {
             where: {
                 id: req.params.id
             }
+        })
+        .then((users) => {
+            return res.status(200).json(users);
+        })
+        .catch((err) => {
+            return res.status(400).json({ err });
+        });
+};
+
+export const getResultByUserId = (req, res) => {
+    ketqua
+        .findAll({
+            include: [
+                {
+                    model: dethithisinh,
+                    include: [
+                        {
+                            model: dethi
+                        },
+                        {
+                            model: taikhoan,
+                            include: [
+                                {
+                                    model: nguoidung
+                                }
+                            ]
+                        }
+                    ],
+                    where: {
+                        id_thisinh: req.params.id
+                    }
+                }
+            ]
+        })
+        .then((users) => {
+            return res.status(200).json(users);
+        })
+        .catch((err) => {
+            return res.status(400).json({ err });
+        });
+};
+
+export const getResultByUserExamId = (req, res) => {
+    ketqua
+        .findAll({
+            include: [
+                {
+                    model: dethithisinh,
+                    include: [
+                        {
+                            model: dethi
+                        },
+                        {
+                            model: taikhoan,
+                            include: [
+                                {
+                                    model: nguoidung
+                                }
+                            ]
+                        }
+                    ],
+                    where: {
+                        id_dethi: req.params.id
+                    }
+                }
+            ]
         })
         .then((users) => {
             return res.status(200).json(users);

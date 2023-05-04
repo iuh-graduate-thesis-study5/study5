@@ -74,27 +74,22 @@ TablePaginationActions.propTypes = {
     rowsPerPage: PropTypes.number.isRequired
 };
 
-export default function ExamTable() {
+export default function FinalExamTable() {
     const dispatch = useDispatch();
-    const exams = useSelector((state) => state.exam.listExam);
+    const exams = useSelector((state) => state.result.listResultByExamId);
     const [listExam, setListExam] = useState([]);
-    useEffect(() => {
-        dispatch(actions.getAllExam());
-    }, []);
+
     useEffect(() => {
         if (exams) {
             const listNowExam = [];
-            exams.forEach((e) => {
-                var date = Date.now();
-                const newDateObj = moment(e.thoigianthi).add(60, 'm').toDate();
-                if (moment(date).isBefore(newDateObj)) {
-                    listNowExam.push(e);
-                }
+            exams.forEach((e, i) => {
+                e['stt'] = i + 1;
+                listNowExam.push(e);
+                //Export
             });
             setListExam(listNowExam);
         }
     }, [exams]);
-
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(6);
 
@@ -109,30 +104,31 @@ export default function ExamTable() {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
+
     return (
         <TableContainer component={Paper}>
             <Table aria-label="custom pagination table">
                 <TableHead>
                     <TableRow>
-                        <TableCell align="left">Mã đề thi</TableCell>
-                        <TableCell align="left">Tên đề thi</TableCell>
-                        <TableCell align="left">Người tạo</TableCell>
-                        <TableCell align="left">Ngày tạo</TableCell>
-                        <TableCell align="left">Thời gian thi</TableCell>
-                        <TableCell align="left">Ghi chú</TableCell>
+                        <TableCell align="center">STT</TableCell>
+                        <TableCell align="left">Tên thí sinh</TableCell>
+                        <TableCell align="left">Số câu đúng</TableCell>
+                        <TableCell align="left">Số câu sai</TableCell>
+                        <TableCell align="left">Số câu bỏ qua</TableCell>
+                        <TableCell align="left">Tổng điểm</TableCell>
                         <TableCell align="center"></TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {(rowsPerPage > 0 ? listExam.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : listExam).map((row) => (
                         <TableRow key={row.id}>
-                            <TableCell align="left"> {row?.madethi}</TableCell>
-                            <TableCell align="left"> {row?.tieude}</TableCell>
-                            <TableCell align="left"> {row?.taikhoan?.tentaikhoan}</TableCell>
-                            <TableCell component="th" scope="row">
-                                {moment(row.ngaytao).format('MM/DD/YYYY')}
-                            </TableCell>
-                            <TableCell align="left">{moment(row.thoigianthi).format('hh:mm - MM/DD/YYYY')}</TableCell>
+                            <TableCell align="center"> {row?.stt}</TableCell>
+                            <TableCell align="left"> {row?.dethithisinh?.taikhoan?.nguoidung?.tennguoidung}</TableCell>
+                            <TableCell align="left"> {row?.socaudung}</TableCell>
+                            <TableCell align="left"> {row?.socausai}</TableCell>
+                            <TableCell align="left"> {row?.socauboqua}</TableCell>
+                            <TableCell align="left"> {row?.tongdiem}</TableCell>
+
                             <TableCell align="left">{row.mota}</TableCell>
                             <TableCell align="center">
                                 <Link

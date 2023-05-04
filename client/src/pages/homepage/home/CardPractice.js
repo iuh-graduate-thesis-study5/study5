@@ -6,6 +6,7 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
+import { Link } from 'react-router-dom';
 
 export default function CardPractice({ listTestExam }) {
     return (
@@ -28,9 +29,11 @@ export default function CardPractice({ listTestExam }) {
                 </Typography>
             </CardContent>
             <CardActions style={{ display: 'flex', justifyContent: 'center' }}>
-                <Button variant="outlined" size="small" fullWidth>
-                    Chi tiết
-                </Button>
+                <Link to={'/home/room/' + listTestExam?.id} style={{ textDecoration: 'none', color: 'black', width: '100%' }}>
+                    <Button variant="outlined" size="small" fullWidth>
+                        Chi tiết
+                    </Button>
+                </Link>
             </CardActions>
         </Card>
     );

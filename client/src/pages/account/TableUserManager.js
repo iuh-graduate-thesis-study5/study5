@@ -241,7 +241,7 @@ export default function TableUserManager() {
                             <b>Mật khẩu</b>
                         </Grid>
                         <Grid item xs={8}>
-                            12345
+                            123456
                         </Grid>
                         <Grid item xs={4}>
                             <b>Quyền</b>

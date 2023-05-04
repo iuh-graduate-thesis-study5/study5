@@ -33,17 +33,16 @@ export default function ReSultExam() {
             dispatch(actions.getResult(id));
         }
     }, [id]);
-    console.log(result);
     return (
         <div>
             <div style={{ textAlign: 'left' }}>
-                <h4>ETS TOEIC 2022 Test 2</h4>
+                <h4>{result?.dethithisinh?.dethi?.tieude}</h4>
             </div>
             <Grid container spacing={2}>
                 <Grid item xs={4.2}>
                     <CardExam
                         header={'Thông tin kết quả thi'}
-                        user={'khang'}
+                        user={result?.dethithisinh?.taikhoan?.nguoidung?.tennguoidung}
                         point={result?.tongdiem}
                         percent={(result?.socaudung * 100) / 51}
                     />
