@@ -12,6 +12,7 @@ const MySchedule = Loadable(lazy(() => import('pages/schedule')));
 const ExamLibrary = Loadable(lazy(() => import('pages/exam-library')));
 const ResultExam = Loadable(lazy(() => import('pages/test-page/result-exam')));
 const MyResult = Loadable(lazy(() => import('pages/homepage/my-result')));
+const MYProfile = Loadable(lazy(() => import('pages/detail-account')));
 
 // render - sample page
 const SamplePage = Loadable(lazy(() => import('pages/extra-pages/SamplePage')));
@@ -55,6 +56,10 @@ const HomeRoutes = {
         {
             path: 'result-exam/:id',
             element: <ResultExam />
+        },
+        {
+            path: 'user-detail',
+            element: <MYProfile />
         }
     ]
 };

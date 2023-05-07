@@ -33,11 +33,12 @@ function ResponsiveAppBar() {
     const logOut = () => {
         dispatch(actions.Logout());
     };
+
     if (localStorage.getItem('user_authenticated') == 'undefined') {
         navigate('/login');
     }
     const settings = [
-        { text: 'Thông tin cá nhân', icon: <ProfileOutlined />, link: '/user-detail', onClick: null },
+        { text: 'Thông tin cá nhân', icon: <ProfileOutlined />, link: '/home/user-detail', onClick: null },
         { text: 'Trang quản lý', icon: <ReconciliationOutlined />, link: '/', onClick: null },
         { text: 'Đăng xuất', icon: <LogoutOutlined />, link: '/login', onClick: logOut }
     ];
@@ -63,6 +64,7 @@ function ResponsiveAppBar() {
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
     };
+    console.log(account);
     return (
         <AppBar position="sticky" style={{ backgroundColor: 'white', margin: 0 }}>
             <Container maxWidth="xl" style={{ backgroundColor: 'white', margin: 0 }}>
@@ -122,19 +124,25 @@ function ResponsiveAppBar() {
                             onClose={handleCloseUserMenu}
                         >
                             {settings.map((setting) => (
-                                <Link
-                                    key={setting.link}
-                                    to={setting.link}
-                                    onClick={setting.onClick}
-                                    style={{ textDecoration: 'none', color: 'black' }}
-                                >
-                                    <MenuItem onClick={handleCloseUserMenu}>
-                                        {setting.icon} &nbsp;&nbsp;
-                                        <Typography style={{ color: 'black' }} textAlign="center">
-                                            {setting.text}
-                                        </Typography>
-                                    </MenuItem>
-                                </Link>
+                                <React.Fragment>
+                                    {setting.link === '/' && account?.quyen == 'STUDENT' ? (
+                                        <></>
+                                    ) : (
+                                        <Link
+                                            key={setting.link}
+                                            to={setting.link}
+                                            onClick={setting.onClick}
+                                            style={{ textDecoration: 'none', color: 'black' }}
+                                        >
+                                            <MenuItem onClick={handleCloseUserMenu}>
+                                                {setting.icon} &nbsp;&nbsp;
+                                                <Typography style={{ color: 'black' }} textAlign="center">
+                                                    {setting.text}
+                                                </Typography>
+                                            </MenuItem>
+                                        </Link>
+                                    )}
+                                </React.Fragment>
                             ))}
                         </Menu>
                     </Box>

@@ -92,6 +92,22 @@ export default function AccountButtonComponent() {
     const changeTypeOfExam = (event) => {
         setType(event.target.value);
     };
+    const clear = () => {
+        setValue(dayjs(Date.now()));
+        if (exam) {
+            const listExistedUserId = [];
+            exams.forEach((e) => {
+                if (moment(e.thoigianthi).format('DD/MM/YYYY') === moment(value.$d).format('DD/MM/YYYY')) {
+                    console.log(e);
+                    e?.dethithisinhs?.forEach((elm) => {
+                        listExistedUserId.push(elm?.taikhoan?.nguoidung?.id);
+                    });
+                }
+            });
+            setListUser(users.filter((e) => !listExistedUserId.includes(e.id)));
+        }
+        setListStudent([]);
+    };
     const generateExam = (e) => {
         e.preventDefault();
         const listIdStudent = [];
@@ -99,8 +115,6 @@ export default function AccountButtonComponent() {
             window.alert('Vui lòng nhập tiêu đề');
             return;
         }
-        console.log(moment(value.$d));
-        console.log(moment(Date.now()));
         if (moment(value.$d).isBefore(moment(Date.now()))) {
             window.alert('Vui lòng chọn giờ thi lớn hơn hiện tại');
             return;
@@ -118,6 +132,8 @@ export default function AccountButtonComponent() {
         values.loaidethi = type;
         values.listStudent = listIdStudent;
         dispatch(examAction.generateExam(values));
+        resetForm();
+        clear();
         handleClose();
     };
     useEffect(() => {
@@ -125,16 +141,15 @@ export default function AccountButtonComponent() {
             const listExistedUserId = [];
             exams.forEach((e) => {
                 if (moment(e.thoigianthi).format('DD/MM/YYYY') === moment(value.$d).format('DD/MM/YYYY')) {
-                    console.log(e);
+                    console.log(e?.dethithisinhs);
                     e?.dethithisinhs?.forEach((elm) => {
                         listExistedUserId.push(elm?.taikhoan?.nguoidung?.id);
                     });
                 }
             });
-            setListUser(users.filter((e) => !listExistedUserId.includes(e.id)));
+            setListUser(users.filter((e) => !listExistedUserId.includes(e.nguoidung.id)));
         }
-    }, [exam, value]);
-    console.log(listUser);
+    }, [exam, value, users]);
     return (
         <div style={{ margin: '1rem 0' }}>
             <Button variant="contained" size="medium" onClick={handleClickOpen}>

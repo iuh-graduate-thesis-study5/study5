@@ -35,12 +35,6 @@ const ProfileTab = ({ handleLogout }) => {
                 </ListItemIcon>
                 <ListItemText primary="Trang chủ" />
             </ListItemButton>
-            <ListItemButton selected={selectedIndex === 1} onClick={(event) => handleListItemClick(event, 1)}>
-                <ListItemIcon>
-                    <UserOutlined />
-                </ListItemIcon>
-                <ListItemText primary="Thông tin cá nhân" />
-            </ListItemButton>
             <ListItemButton selected={selectedIndex === 2} onClick={() => Logout()}>
                 <ListItemIcon>
                     <LogoutOutlined />

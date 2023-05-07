@@ -46,7 +46,7 @@ export default function Home() {
     useEffect(() => {
         if (examByUserId) {
             const listNowExam = [];
-            exams.forEach((e) => {
+            examByUserId.forEach((e) => {
                 var date = Date.now();
                 var formattedDateExam = moment(e.thoigianthi).format('MM-DD-YYYY');
                 var formattedDateNow = moment(date).format('MM-DD-YYYY');
