@@ -34,7 +34,6 @@ const PieChartExam = ({ listChart }) => {
     useEffect(() => {
         setSeries(listChart);
     }, [listChart]);
-    console.log(series);
     useEffect(() => {
         setOptions({
             chart: {

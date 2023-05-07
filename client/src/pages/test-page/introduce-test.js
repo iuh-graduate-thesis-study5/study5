@@ -18,7 +18,6 @@ export default function TestIntroduce() {
             dispatch(actions.getExamById(id));
         }
     }, []);
-    console.log(exam);
     return (
         <div style={{ margin: '2rem 0' }}>
             <Grid container spacing={2}>

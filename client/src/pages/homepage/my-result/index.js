@@ -13,10 +13,10 @@ export default function index() {
             <div className="light-gradient-bg">
                 <div className="calendar">
                     <h2>KẾT QUẢ THI</h2>
-                    <Alert severity="info">
+                    <Alert severity="warning">
                         <AlertTitle>Tips</AlertTitle>
-                        Nơi đây chứa tất cả các đề thi mà trang web của chúng tôi cung cấp cho bạn. Nó sẽ giúp bạn ôn luyện để hoàn thành
-                        các bài thi chính thức 1 cách xuất sắc — <strong>khám phá ngay!</strong>
+                        Nơi đây chứa tất cả các bài thi mà bạn đã tham gia trên web của chúng. Kiểm tra và rút kinh nghiêp trong các bài thi
+                        mới để hoàn thành xuất sắc hơn— <strong>khám phá ngay!</strong>
                     </Alert>
                 </div>
             </div>

@@ -28,23 +28,22 @@ import * as examAction from 'actions/exam.action';
 import { useEffect, useState } from 'react';
 import moment from 'moment';
 import 'css/exam.css';
-import exam from 'menu-items/exams';
+import CustomizedSnackbars from 'pages/components-overview/CustomizedSnackbars';
 const initialFieldValues = {
     tieude: '',
-    mota: ''
+    mota: '',
+    nguoidung: '',
+    loaide: 0
 };
-export default function AccountButtonComponent() {
+export default function PopUpEdit({ open, exam, handleCloseEdit }) {
     const dispatch = useDispatch();
     const [value, setValue] = React.useState(dayjs(Date.now()));
-    const [open, setOpen] = React.useState(false);
     const users = useSelector((state) => state.account.listAccount);
     const [listUser, setListUser] = React.useState([]);
     const [listStudent, setListStudent] = React.useState([]);
     const [type, setType] = React.useState(0);
     const account = useSelector((state) => state.account.account);
     const user_id = useSelector((state) => state.account.userAuth);
-    const exams = useSelector((state) => state.exam.listExam);
-
     useEffect(() => {
         if (user_id) {
             dispatch(action.getAccount(user_id));
@@ -53,6 +52,7 @@ export default function AccountButtonComponent() {
     React.useEffect(() => {
         dispatch(action.test());
     }, []);
+
     const validate = (fieldValues = values) => {
         let temp = { ...errors };
         if ('tieude' in fieldValues) {
@@ -68,13 +68,30 @@ export default function AccountButtonComponent() {
         if (fieldValues == values) return Object.values(temp).every((x) => x == '');
     };
     const { values, setValues, errors, setErrors, handleInputChange, resetForm } = useForm(initialFieldValues, validate, 0);
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
 
+    useEffect(() => {
+        if (exam && users) {
+            const value_exam = {
+                tieude: exam.tieude,
+                mota: exam.mota,
+                nguoidung: exam?.taikhoan?.nguoidung?.tennguoidung,
+                loaide: exam?.loaidethi
+            };
+            const listStudentActive = [];
+            const listStudentId = [];
+            exam?.dethithisinhs?.forEach((e) => {
+                listStudentId.push(e?.taikhoan?.id);
+                listStudentActive.push(e?.taikhoan);
+            });
+            setListUser(users.filter((e) => !listStudentId.includes(e.id)));
+            setValue(dayjs(new Date(exam?.thoigianthi)));
+            setValues(value_exam);
+            setListStudent(listStudentActive);
+        }
+    }, [exam, users]);
     const handleClose = () => {
+        handleCloseEdit();
         resetForm();
-        setOpen(false);
     };
     const handleSubmit = () => {
         if (validate()) {
@@ -89,9 +106,7 @@ export default function AccountButtonComponent() {
         setListStudent(listStudent.filter((item) => item.id !== user.id));
         setListUser((oldArray) => [...oldArray, user]);
     };
-    const changeTypeOfExam = (event) => {
-        setType(event.target.value);
-    };
+
     const generateExam = (e) => {
         e.preventDefault();
         const listIdStudent = [];
@@ -99,10 +114,8 @@ export default function AccountButtonComponent() {
             window.alert('Vui lòng nhập tiêu đề');
             return;
         }
-        console.log(moment(value.$d));
-        console.log(moment(Date.now()));
         if (moment(value.$d).isBefore(moment(Date.now()))) {
-            window.alert('Vui lòng chọn giờ thi lớn hơn hiện tại');
+            window.alert('Vui lòng thêm thí sinh cho bài thi này');
             return;
         }
         if (type === 0 && listStudent.length === 0) {
@@ -113,33 +126,21 @@ export default function AccountButtonComponent() {
         for (let i = 0; i < listStudent.length; i++) {
             listIdStudent.push(listStudent[i].id);
         }
-        values.id_nguoitao = user_id;
         values.thoigianthi = value;
         values.loaidethi = type;
         values.listStudent = listIdStudent;
-        dispatch(examAction.generateExam(values));
-        handleClose();
+        dispatch(examAction.updateExam(values, exam?.id));
+        handleOpenSnackBar();
     };
-    useEffect(() => {
-        if (exam) {
-            const listExistedUserId = [];
-            exams.forEach((e) => {
-                if (moment(e.thoigianthi).format('DD/MM/YYYY') === moment(value.$d).format('DD/MM/YYYY')) {
-                    console.log(e);
-                    e?.dethithisinhs?.forEach((elm) => {
-                        listExistedUserId.push(elm?.taikhoan?.nguoidung?.id);
-                    });
-                }
-            });
-            setListUser(users.filter((e) => !listExistedUserId.includes(e.id)));
-        }
-    }, [exam, value]);
-    console.log(listUser);
+    const [openSnackbar, setOpenSnackBar] = useState(false);
+    const handleOpenSnackBar = () => {
+        setOpenSnackBar(true);
+    };
+    const handleCloseSnackBar = () => {
+        setOpenSnackBar(false);
+    };
     return (
         <div style={{ margin: '1rem 0' }}>
-            <Button variant="contained" size="medium" onClick={handleClickOpen}>
-                Tạo đề thi mới
-            </Button>
             <Dialog open={open} onClose={handleClose} maxWidth={'lg'} fullWidth={true}>
                 <DialogTitle>Nhập thông tin đề thi</DialogTitle>
                 <DialogContent>
@@ -155,7 +156,7 @@ export default function AccountButtonComponent() {
                                     autoComplete="off"
                                     InputProps={{ inputProps: { min: 0, max: 20 } }}
                                     fullWidth
-                                    value={values.tieude || ''}
+                                    value={values.tieude}
                                     onChange={handleInputChange}
                                     {...(errors.tieude && { error: true, helperText: errors.tieude })}
                                 />
@@ -168,9 +169,9 @@ export default function AccountButtonComponent() {
                                     name="tennguoidung"
                                     type="text"
                                     autoComplete="off"
-                                    InputProps={{ inputProps: { min: 0, max: 20, readOnly: true } }}
+                                    InputProps={{ inputProps: { min: 0, max: 100, readOnly: true } }}
                                     fullWidth
-                                    value={account?.nguoidung?.tennguoidung}
+                                    value={values.nguoidung}
                                     onChange={handleInputChange}
                                     {...(errors.tennguoidung && { error: true, helperText: errors.tennguoidung })}
                                 />
@@ -178,12 +179,12 @@ export default function AccountButtonComponent() {
                             <Grid item xs={4}>
                                 <p>Loại đề</p>
                                 <Select
-                                    id="gioitinh"
-                                    name="gioitinh"
+                                    id="loaide"
+                                    name="loaide"
                                     fullWidth
                                     labelId="demo-simple-select-label"
-                                    value={type}
-                                    onChange={changeTypeOfExam}
+                                    value={values.loaide || 0}
+                                    onChange={handleInputChange}
                                 >
                                     <MenuItem value={0}>Đề kiểm tra</MenuItem>
                                     <MenuItem value={1}>Đề thi thử</MenuItem>
@@ -196,7 +197,7 @@ export default function AccountButtonComponent() {
                                         <LocalizationProvider dateAdapter={AdapterDayjs} style={{ padding: 0 }}>
                                             <DemoContainer components={['DateTimePicker', 'DateTimePicker']} style={{ padding: 0 }}>
                                                 <DateTimePicker
-                                                    format="DD/MM/YYYY - HH:mm a"
+                                                    format="DD/MM/YYYY - hh:mm"
                                                     value={value}
                                                     onChange={(newValue) => setValue(newValue)}
                                                 />
@@ -258,7 +259,7 @@ export default function AccountButtonComponent() {
                         </Grid>
                         <br></br>
                         <Button fullWidth size="large" variant="contained" color="primary" type="submit" onClick={generateExam}>
-                            TẠO ĐỀ THI
+                            CẬP NHẬT
                         </Button>
                     </Formsy>
                 </DialogContent>
@@ -268,6 +269,7 @@ export default function AccountButtonComponent() {
                     </Button>
                 </DialogActions>
             </Dialog>
+            <CustomizedSnackbars open={openSnackbar} text={'Cập nhật bài thi thành công'} handleCloseSnackBar={handleCloseSnackBar} />
         </div>
     );
 }

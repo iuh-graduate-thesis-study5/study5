@@ -22,6 +22,26 @@ export const addUser = (req, res) => {
         return getUser(req, res);
     });
 };
+export const updateUser = (req, res) => {
+    nguoidung
+        .update(req.body, { where: { id: req.params.id } })
+        .then((rs) => {
+            return getUser(req, res);
+        })
+        .catch((err) => {
+            return res.status(400).json({ err });
+        });
+};
+export const register = (req, res) => {
+    nguoidung
+        .create(req.body)
+        .then((rs) => {
+            return res.status(200).json(rs);
+        })
+        .catch((err) => {
+            return res.status(400).json({ err });
+        });
+};
 
 export const userNotAccount = (req, res) => {
     const q = 'SELECT * FROM nguoidung u WHERE NOT EXISTS(SELECT * FROM taikhoan a WHERE a.id_nguoidung = u.id)';

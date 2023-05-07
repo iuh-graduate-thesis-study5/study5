@@ -65,7 +65,6 @@ const Profile = () => {
     const handleToggle = () => {
         setOpen((prevOpen) => !prevOpen);
     };
-    console.log(account);
     const handleClose = (event) => {
         if (anchorRef.current && anchorRef.current.contains(event.target)) {
             return;

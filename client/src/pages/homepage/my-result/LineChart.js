@@ -21,7 +21,6 @@ const LineChart = () => {
             data: [10]
         }
     ]);
-    console.log(rsByUserId);
     useEffect(() => {
         if (rsByUserId) {
             const listChartValue = [];

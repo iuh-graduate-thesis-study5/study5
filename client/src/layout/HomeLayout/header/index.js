@@ -18,6 +18,7 @@ import { ProfileOutlined, LogoutOutlined, ReconciliationOutlined } from '@ant-de
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import * as actions from 'actions/account.action';
+import { useNavigate } from 'react-router-dom';
 const pages = [
     { text: 'Trang chủ', link: '/home' },
     { text: 'Thư viện đề thi', link: '/home/exams-library' },
@@ -25,12 +26,16 @@ const pages = [
 ];
 
 function ResponsiveAppBar() {
+    const navigate = useNavigate();
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const dispatch = useDispatch();
     const [anchorElUser, setAnchorElUser] = React.useState(null);
     const logOut = () => {
         dispatch(actions.Logout());
     };
+    if (localStorage.getItem('user_authenticated') == 'undefined') {
+        navigate('/login');
+    }
     const settings = [
         { text: 'Thông tin cá nhân', icon: <ProfileOutlined />, link: '/user-detail', onClick: null },
         { text: 'Trang quản lý', icon: <ReconciliationOutlined />, link: '/', onClick: null },
@@ -58,7 +63,6 @@ function ResponsiveAppBar() {
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
     };
-    console.log(account);
     return (
         <AppBar position="sticky" style={{ backgroundColor: 'white', margin: 0 }}>
             <Container maxWidth="xl" style={{ backgroundColor: 'white', margin: 0 }}>

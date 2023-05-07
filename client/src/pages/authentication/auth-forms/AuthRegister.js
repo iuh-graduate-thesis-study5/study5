@@ -1,40 +1,53 @@
-import { useEffect, useState } from 'react';
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import useForm from 'services/useForm';
+import Formsy from 'formsy-react';
+import Grid from '@mui/material/Grid';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import { useDispatch } from 'react-redux';
+import * as actionsAccount from 'actions/account.action';
+import * as action from 'actions/user.action';
+import * as actionUser from 'actions/user.action';
 import { Link as RouterLink } from 'react-router-dom';
-
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 // material-ui
-import {
-    Box,
-    Button,
-    Divider,
-    FormControl,
-    FormHelperText,
-    Grid,
-    Link,
-    IconButton,
-    InputAdornment,
-    InputLabel,
-    OutlinedInput,
-    Stack,
-    Typography
-} from '@mui/material';
-
-// third party
-import * as Yup from 'yup';
-import { Formik } from 'formik';
-
-// project import
-import FirebaseSocial from './FirebaseSocial';
-import AnimateButton from 'components/@extended/AnimateButton';
-import { strengthColor, strengthIndicator } from 'utils/password-strength';
-
+import { IconButton, InputAdornment, OutlinedInput } from '@mui/material';
+import { useSelector } from 'react-redux';
 // assets
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+import SuccessRegister from './SuccessRegister';
 
-// ============================|| FIREBASE - REGISTER ||============================ //
+const initialFieldValues = {
+    tennguoidung: '',
+    email: '',
+    sodienthoai: '',
+    diachi: '',
+    gioitinh: 'Nam',
+    matkhau: ''
+};
+export default function AuthRegister() {
+    const dispatch = useDispatch();
+    const [showPassword, setShowPassword] = React.useState(false);
+    const users = useSelector((state) => state.user.listUser);
 
-const AuthRegister = () => {
-    const [level, setLevel] = useState();
-    const [showPassword, setShowPassword] = useState(false);
+    React.useEffect(() => {
+        dispatch(actionUser.getAllUser());
+    }, []);
+
+    const [listUser, setListUser] = React.useState([]);
+
+    React.useEffect(() => {
+        setListUser(users);
+    }, [users]);
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
     };
@@ -42,230 +55,200 @@ const AuthRegister = () => {
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
     };
+    const [open, setOpen] = React.useState(false);
+    const validate = (fieldValues = values) => {
+        let temp = { ...errors };
 
-    const changePassword = (value) => {
-        const temp = strengthIndicator(value);
-        setLevel(strengthColor(temp));
+        if ('tennguoidung' in fieldValues) {
+            temp.tennguoidung = fieldValues.tennguoidung ? '' : 'Tên người dùng không được để trống';
+        }
+        if ('email' in fieldValues) {
+            let err = 0;
+            listUser.map((u) => {
+                if (u.email.toLowerCase() === fieldValues.email.toLowerCase()) {
+                    err = err + 1;
+                }
+            });
+            if (err >= 1) {
+                err < 1 ? (temp.email = '') : (temp.email = 'Email này đã được đăng kí');
+            } else if (fieldValues.ten === '') {
+                temp.email = fieldValues.email ? '' : 'Email không được để trống';
+            } else if (fieldValues.ten !== '') {
+                temp.email = fieldValues.email ? '' : 'Email không được để trống';
+            }
+        }
+        if ('sodienthoai' in fieldValues) {
+            temp.sodienthoai = fieldValues.sodienthoai ? '' : 'Số điện thoại không được để trống';
+        }
+        if ('matkhau' in fieldValues) {
+            temp.matkhau = fieldValues.matkhau.length > 6 ? '' : 'Mật khẩu phải từ 6 kí tự';
+        }
+        setErrors({
+            ...temp
+        });
+
+        if (fieldValues == values) return Object.values(temp).every((x) => x == '');
+    };
+    const { values, setValues, errors, setErrors, handleInputChange, resetForm } = useForm(initialFieldValues, validate, 0);
+    const [isRegister, setIsRegister] = React.useState(false);
+    const handleClickOpen = () => {
+        setOpen(true);
     };
 
-    useEffect(() => {
-        changePassword('');
-    }, []);
-
+    const handleClose = () => {
+        setOpen(false);
+    };
+    const handleSubmit = () => {
+        if (validate()) {
+            action.register(values).then((rs) => {
+                const account = {
+                    tentaikhoan: rs.data.email,
+                    matkhau: values.matkhau,
+                    quyen: 'STUDENT',
+                    trangthai: 2,
+                    id_nguoidung: rs.data.id
+                };
+                dispatch(actionsAccount.register(account));
+                resetForm();
+                setIsRegister(true);
+            });
+        }
+    };
     return (
-        <>
-            <Formik
-                initialValues={{
-                    firstname: '',
-                    lastname: '',
-                    email: '',
-                    company: '',
-                    password: '',
-                    submit: null
-                }}
-                validationSchema={Yup.object().shape({
-                    firstname: Yup.string().max(255).required('First Name is required'),
-                    lastname: Yup.string().max(255).required('Last Name is required'),
-                    email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-                    password: Yup.string().max(255).required('Password is required')
-                })}
-                onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-                    try {
-                        setStatus({ success: false });
-                        setSubmitting(false);
-                    } catch (err) {
-                        console.error(err);
-                        setStatus({ success: false });
-                        setErrors({ submit: err.message });
-                        setSubmitting(false);
-                    }
-                }}
-            >
-                {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
-                    <form noValidate onSubmit={handleSubmit}>
-                        <Grid container spacing={3}>
-                            <Grid item xs={12} md={6}>
-                                <Stack spacing={1}>
-                                    <InputLabel htmlFor="firstname-signup">First Name*</InputLabel>
-                                    <OutlinedInput
-                                        id="firstname-login"
-                                        type="firstname"
-                                        value={values.firstname}
-                                        name="firstname"
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        placeholder="John"
-                                        fullWidth
-                                        error={Boolean(touched.firstname && errors.firstname)}
-                                    />
-                                    {touched.firstname && errors.firstname && (
-                                        <FormHelperText error id="helper-text-firstname-signup">
-                                            {errors.firstname}
-                                        </FormHelperText>
-                                    )}
-                                </Stack>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <Stack spacing={1}>
-                                    <InputLabel htmlFor="lastname-signup">Last Name*</InputLabel>
-                                    <OutlinedInput
-                                        fullWidth
-                                        error={Boolean(touched.lastname && errors.lastname)}
-                                        id="lastname-signup"
-                                        type="lastname"
-                                        value={values.lastname}
-                                        name="lastname"
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        placeholder="Doe"
-                                        inputProps={{}}
-                                    />
-                                    {touched.lastname && errors.lastname && (
-                                        <FormHelperText error id="helper-text-lastname-signup">
-                                            {errors.lastname}
-                                        </FormHelperText>
-                                    )}
-                                </Stack>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Stack spacing={1}>
-                                    <InputLabel htmlFor="company-signup">Company</InputLabel>
-                                    <OutlinedInput
-                                        fullWidth
-                                        error={Boolean(touched.company && errors.company)}
-                                        id="company-signup"
-                                        value={values.company}
-                                        name="company"
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        placeholder="Demo Inc."
-                                        inputProps={{}}
-                                    />
-                                    {touched.company && errors.company && (
-                                        <FormHelperText error id="helper-text-company-signup">
-                                            {errors.company}
-                                        </FormHelperText>
-                                    )}
-                                </Stack>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Stack spacing={1}>
-                                    <InputLabel htmlFor="email-signup">Email Address*</InputLabel>
-                                    <OutlinedInput
-                                        fullWidth
-                                        error={Boolean(touched.email && errors.email)}
-                                        id="email-login"
-                                        type="email"
-                                        value={values.email}
-                                        name="email"
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        placeholder="demo@company.com"
-                                        inputProps={{}}
-                                    />
-                                    {touched.email && errors.email && (
-                                        <FormHelperText error id="helper-text-email-signup">
-                                            {errors.email}
-                                        </FormHelperText>
-                                    )}
-                                </Stack>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Stack spacing={1}>
-                                    <InputLabel htmlFor="password-signup">Password</InputLabel>
-                                    <OutlinedInput
-                                        fullWidth
-                                        error={Boolean(touched.password && errors.password)}
-                                        id="password-signup"
-                                        type={showPassword ? 'text' : 'password'}
-                                        value={values.password}
-                                        name="password"
-                                        onBlur={handleBlur}
-                                        onChange={(e) => {
-                                            handleChange(e);
-                                            changePassword(e.target.value);
-                                        }}
-                                        endAdornment={
-                                            <InputAdornment position="end">
-                                                <IconButton
-                                                    aria-label="toggle password visibility"
-                                                    onClick={handleClickShowPassword}
-                                                    onMouseDown={handleMouseDownPassword}
-                                                    edge="end"
-                                                    size="large"
-                                                >
-                                                    {showPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
-                                                </IconButton>
-                                            </InputAdornment>
-                                        }
-                                        placeholder="******"
-                                        inputProps={{}}
-                                    />
-                                    {touched.password && errors.password && (
-                                        <FormHelperText error id="helper-text-password-signup">
-                                            {errors.password}
-                                        </FormHelperText>
-                                    )}
-                                </Stack>
-                                <FormControl fullWidth sx={{ mt: 2 }}>
-                                    <Grid container spacing={2} alignItems="center">
-                                        <Grid item>
-                                            <Box sx={{ bgcolor: level?.color, width: 85, height: 8, borderRadius: '7px' }} />
-                                        </Grid>
-                                        <Grid item>
-                                            <Typography variant="subtitle1" fontSize="0.75rem">
-                                                {level?.label}
-                                            </Typography>
-                                        </Grid>
-                                    </Grid>
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Typography variant="body2">
-                                    By Signing up, you agree to our &nbsp;
-                                    <Link variant="subtitle2" component={RouterLink} to="#">
-                                        Terms of Service
-                                    </Link>
-                                    &nbsp; and &nbsp;
-                                    <Link variant="subtitle2" component={RouterLink} to="#">
-                                        Privacy Policy
-                                    </Link>
-                                </Typography>
-                            </Grid>
-                            {errors.submit && (
-                                <Grid item xs={12}>
-                                    <FormHelperText error>{errors.submit}</FormHelperText>
-                                </Grid>
-                            )}
-                            <Grid item xs={12}>
-                                <AnimateButton>
-                                    <Button
-                                        disableElevation
-                                        disabled={isSubmitting}
-                                        fullWidth
-                                        size="large"
-                                        type="submit"
-                                        variant="contained"
-                                        color="primary"
-                                    >
-                                        Create Account
-                                    </Button>
-                                </AnimateButton>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Divider>
-                                    <Typography variant="caption">Sign up with</Typography>
-                                </Divider>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <FirebaseSocial />
-                            </Grid>
+        <div style={{ margin: '1rem 0' }}>
+            {isRegister ? (
+                <SuccessRegister />
+            ) : (
+                <Formsy onSubmit={handleSubmit} style={{ margin: '1rem 0' }}>
+                    <Grid container spacing={1}>
+                        <Grid item xs={12}>
+                            <span>
+                                Tên người dùng <span style={{ color: 'red' }}>*</span>
+                            </span>
+                            <TextField
+                                id="tennguoidung"
+                                variant="outlined"
+                                name="tennguoidung"
+                                type="text"
+                                autoComplete="off"
+                                InputProps={{ inputProps: { min: 0, max: 20 } }}
+                                fullWidth
+                                value={values.tennguoidung || ''}
+                                onChange={handleInputChange}
+                                {...(errors.tennguoidung && { error: true, helperText: errors.tennguoidung })}
+                            />
                         </Grid>
-                    </form>
-                )}
-            </Formik>
-        </>
-    );
-};
+                        <Grid item xs={12}>
+                            <span>
+                                Email <span style={{ color: 'red' }}>*</span>
+                            </span>
+                            <TextField
+                                id="email"
+                                variant="outlined"
+                                name="email"
+                                type="email"
+                                autoComplete="off"
+                                InputProps={{ inputProps: { min: 0, max: 20 } }}
+                                fullWidth
+                                value={values.email || ''}
+                                onChange={handleInputChange}
+                                {...(errors.email && { error: true, helperText: errors.email })}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <span>
+                                Số điện thoại <span style={{ color: 'red' }}>*</span>
+                            </span>
+                            <TextField
+                                id="sodienthoai"
+                                variant="outlined"
+                                name="sodienthoai"
+                                type="text"
+                                autoComplete="off"
+                                InputProps={{ inputProps: { min: 0, max: 20 } }}
+                                fullWidth
+                                value={values.sodienthoai || ''}
+                                onChange={handleInputChange}
+                                {...(errors.sodienthoai && { error: true, helperText: errors.sodienthoai })}
+                            />
+                        </Grid>
 
-export default AuthRegister;
+                        <Grid item xs={12}>
+                            <span>
+                                Mật khẩu <span style={{ color: 'red' }}>*</span>
+                            </span>
+                            <TextField
+                                fullWidth
+                                type={showPassword ? 'text' : 'password'}
+                                name="matkhau"
+                                value={values.matkhau}
+                                onChange={handleInputChange}
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                aria-label="toggle password visibility"
+                                                onClick={handleClickShowPassword}
+                                                onMouseDown={handleMouseDownPassword}
+                                                edge="end"
+                                                size="large"
+                                            >
+                                                {showPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    )
+                                }}
+                                {...(errors.matkhau && { error: true, helperText: errors.matkhau })}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <span>
+                                Giới tính <span style={{ color: 'red' }}>*</span>
+                            </span>
+                            <Select
+                                id="gioitinh"
+                                name="gioitinh"
+                                fullWidth
+                                labelId="demo-simple-select-label"
+                                value={values.gioitinh}
+                                onChange={handleInputChange}
+                                {...(errors.gioitinh && { error: true, helperText: errors.gioitinh })}
+                            >
+                                <MenuItem value={'Nam'}>Nam</MenuItem>
+                                <MenuItem value={'Nữ'}>Nữ</MenuItem>
+                            </Select>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <span>
+                                Địa chỉ <span style={{ color: 'red' }}>*</span>
+                            </span>
+                            <TextField
+                                id="diachi"
+                                variant="outlined"
+                                helperText=" "
+                                name="diachi"
+                                type="text"
+                                autoComplete="off"
+                                InputProps={{ inputProps: { min: 0, max: 20 } }}
+                                fullWidth
+                                value={values.diachi || ''}
+                                onChange={handleInputChange}
+                                {...(errors.diachi && { error: true, helperText: errors.diachi })}
+                            />
+                        </Grid>
+                    </Grid>
+                    <Button
+                        fullWidth
+                        size="large"
+                        variant="contained"
+                        color="primary"
+                        type="submit"
+                        // style={{ display: displayButton }}
+                    >
+                        Đăng Ký
+                    </Button>
+                </Formsy>
+            )}
+        </div>
+    );
+}

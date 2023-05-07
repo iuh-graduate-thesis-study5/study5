@@ -19,6 +19,17 @@ export const examReducer = (state = initialState, action) => {
                 ...state,
                 listExam: [...action.payload]
             };
+        case ACTION_TYPES.DELETE_EXAM:
+            return {
+                ...state,
+                listExam: [...action.payload]
+            };
+
+        case ACTION_TYPES.UPDATE_EXAM:
+            return {
+                ...state,
+                listExam: [...action.payload]
+            };
         case ACTION_TYPES.FIND_BY_ID:
             return {
                 ...state,

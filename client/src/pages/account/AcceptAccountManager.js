@@ -100,7 +100,7 @@ const rows = [
     createData('Oreo', 437, 18.0)
 ].sort((a, b) => (a.calories < b.calories ? -1 : 1));
 
-export default function AccountTable({ isAction }) {
+export default function AcceptAccount() {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
     const [listAccount, setListAccount] = useState([]);
@@ -109,7 +109,7 @@ export default function AccountTable({ isAction }) {
     const [detailAccount, setDetailAccount] = React.useState({});
     const [role, setRole] = React.useState('STUDENT');
     const [status, setStatus] = React.useState(0);
-    const [count, setCount] = React.useState([0, 0, 0]);
+
     const account = useSelector((state) => state.account.listAccount);
 
     useEffect(() => {
@@ -117,26 +117,7 @@ export default function AccountTable({ isAction }) {
     }, []);
 
     useEffect(() => {
-        if (account) {
-            const listAcc = [];
-            let teacher = 0;
-            let admin = 0;
-            let student = 0;
-            account.forEach((e) => {
-                if (e.trangthai != 2) {
-                    listAcc.push(e);
-                }
-                if (e.quyen === 'TEACHER') {
-                    teacher += 1;
-                } else if (e.quyen === 'STUDENT') {
-                    student += 1;
-                } else {
-                    admin += 1;
-                }
-            });
-            setCount([admin, teacher, student]);
-            setListAccount(listAcc);
-        }
+        if (account) setListAccount(account.filter((fb) => fb.trangthai == 2));
     }, [account]);
 
     // Avoid a layout jump when reaching the last page with empty rows.
@@ -176,79 +157,32 @@ export default function AccountTable({ isAction }) {
     };
     const onFind = (e) => {
         if (account) {
-            let rl = account.filter((fb) => fb.tentaikhoan.toLowerCase().includes(e.target.value.toLowerCase()) && fb.trangthai != 2);
+            let rl = account.filter((fb) => fb.tentaikhoan.toLowerCase().includes(e.target.value.toLowerCase()) && fb.trangthai == 2);
             setListAccount(rl);
         }
     };
+
     return (
         <>
-            {!isAction ? (
-                <div
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        width: '100%',
-                        textAlign: 'right',
-                        marginBottom: 10
+            <div style={{ width: '100%', textAlign: 'right', marginBottom: 10 }}>
+                <TextField
+                    style={{ width: 300 }}
+                    size="small"
+                    type={'text'}
+                    name="matkhau"
+                    placeholder="Nhập tên tài khoản cần tìm"
+                    onChange={onFind}
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton aria-label="toggle password visibility" edge="end" size="large">
+                                    <SearchIcon />
+                                </IconButton>
+                            </InputAdornment>
+                        )
                     }}
-                >
-                    <div
-                        style={{
-                            display: 'flex'
-                        }}
-                    >
-                        <div
-                            style={{ width: 20, height: 20, marginRight: 5, backgroundColor: '#FAAD14', border: '1px solid #c3c3c3' }}
-                        ></div>{' '}
-                        <b>Admin: {count[0]}</b>
-                        <div
-                            style={{
-                                width: 20,
-                                height: 20,
-                                marginLeft: 30,
-                                marginRight: 5,
-                                backgroundColor: '#1890FF',
-                                border: '1px solid #c3c3c3'
-                            }}
-                        ></div>{' '}
-                        <b>Giáo viên: {count[1]}</b>
-                        <div
-                            style={{
-                                width: 20,
-                                height: 20,
-                                marginLeft: 30,
-                                marginRight: 5,
-                                backgroundColor: '#13C2C2',
-                                border: '1px solid #c3c3c3'
-                            }}
-                        ></div>{' '}
-                        <b>Học sinh: {count[2]}</b>
-                    </div>
-                    <div>
-                        <TextField
-                            style={{ width: 300 }}
-                            size="small"
-                            type={'text'}
-                            name="matkhau"
-                            placeholder="Nhập tên tài khoản cần tìm"
-                            onChange={onFind}
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        <IconButton aria-label="toggle password visibility" edge="end" size="large">
-                                            <SearchIcon />
-                                        </IconButton>
-                                    </InputAdornment>
-                                )
-                            }}
-                        />
-                    </div>
-                </div>
-            ) : (
-                <></>
-            )}
-
+                />
+            </div>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
                     <TableHead>
@@ -256,7 +190,7 @@ export default function AccountTable({ isAction }) {
                             <TableCell>Tài khoản</TableCell>
                             <TableCell align="center">Quyền</TableCell>
                             <TableCell align="center">Trạng thái</TableCell>
-                            {!isAction ? <TableCell></TableCell> : <></>}
+                            <TableCell></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -276,21 +210,13 @@ export default function AccountTable({ isAction }) {
                                         )}
                                     </TableCell>
                                     <TableCell style={{ width: 160 }} align="center">
-                                        {row.trangthai ? (
-                                            <Chip label="Hoạt động" color="success" style={{ borderRadius: 30 }} />
-                                        ) : (
-                                            <Chip label="Bị khóa" color="error" style={{ borderRadius: 30 }} />
-                                        )}
+                                        <Chip label="Chờ xác nhận" color="warning" style={{ borderRadius: 30 }} />
                                     </TableCell>
-                                    {!isAction ? (
-                                        <TableCell style={{ width: 160 }} align="center">
-                                            <IconButton aria-label="delete" size="large" onClick={() => handleClickOpen(row)}>
-                                                <EditIcon fontSize="inherit" color="primary" />
-                                            </IconButton>
-                                        </TableCell>
-                                    ) : (
-                                        <></>
-                                    )}
+                                    <TableCell style={{ width: 160 }} align="center">
+                                        <IconButton aria-label="delete" size="large" onClick={() => handleClickOpen(row)}>
+                                            <EditIcon fontSize="inherit" color="primary" />
+                                        </IconButton>
+                                    </TableCell>
                                 </TableRow>
                             )
                         )}
@@ -309,29 +235,24 @@ export default function AccountTable({ isAction }) {
                             </TableRow>
                         )}
                     </TableBody>
-                    {!isAction ? (
-                        <TableFooter>
-                            <TablePagination
-                                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                                colSpan={5}
-                                count={rows.length}
-                                labelRowsPerPage={'Số dòng trên 1 trang'}
-                                rowsPerPage={rowsPerPage}
-                                page={page}
-                                SelectProps={{
-                                    inputProps: {
-                                        'aria-label': 'rows per page'
-                                    },
-                                    native: true
-                                }}
-                                onPageChange={handleChangePage}
-                                onRowsPerPageChange={handleChangeRowsPerPage}
-                                ActionsComponent={TablePaginationActions}
-                            />
-                        </TableFooter>
-                    ) : (
-                        <></>
-                    )}
+                    <TableFooter>
+                        <TablePagination
+                            rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+                            colSpan={5}
+                            count={rows.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            SelectProps={{
+                                inputProps: {
+                                    'aria-label': 'rows per page'
+                                },
+                                native: true
+                            }}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                            ActionsComponent={TablePaginationActions}
+                        />
+                    </TableFooter>
                 </Table>
             </TableContainer>
             <Dialog open={open} onClose={handleClose}>
@@ -346,22 +267,7 @@ export default function AccountTable({ isAction }) {
                         <Grid item xs={8}>
                             {detailAccount?.tentaikhoan}
                         </Grid>
-                        <Grid item xs={4}>
-                            <b>Quyền</b>
-                        </Grid>
-                        <Grid item xs={8} fullWidth>
-                            <Select
-                                fullWidth
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={role}
-                                onChange={handleChangeRole}
-                            >
-                                <MenuItem value={'STUDENT'}>STUDENT</MenuItem>
-                                <MenuItem value={'TEACHER'}>TEACHER</MenuItem>
-                                <MenuItem value={'ADMIN'}>ADMIN</MenuItem>
-                            </Select>
-                        </Grid>
+
                         <Grid item xs={4}>
                             <b>Trạng thái hoạt động</b>
                         </Grid>
@@ -373,8 +279,8 @@ export default function AccountTable({ isAction }) {
                                 value={status}
                                 onChange={handleChangeStatus}
                             >
-                                <MenuItem value={0}>Bị khóa</MenuItem>
-                                <MenuItem value={1}>Hoạt động</MenuItem>
+                                <MenuItem value={1}>Xác nhận</MenuItem>
+                                <MenuItem value={2}>Chờ xác nhận</MenuItem>
                             </Select>
                         </Grid>
                     </Grid>

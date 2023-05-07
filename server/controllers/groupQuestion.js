@@ -15,6 +15,9 @@ export const getAllQuestion = (req, res) => {
                     ]
                 }
             ],
+            where: {
+                trangthai: 1
+            },
             order: [['phancauhoi', 'ASC']]
         })
         .then((users) => {
@@ -35,10 +38,17 @@ export const addGroupQuestion = (req, res) => {
     });
 };
 
-// export const userNotAccount = (req, res) => {
-//     const q = 'SELECT * FROM nguoidung u WHERE NOT EXISTS(SELECT * FROM taikhoan a WHERE a.id_nguoidung = u.id)';
-//     db.query(q, (err, data) => {
-//         if (err) return res.status(500).send(err);
-//         return res.status(200).json(data);
-//     });
-// };
+export const deleteQuestion = (req, res) => {
+    nhomcauhoi
+        .update(req.body, {
+            where: {
+                id: req.params.id
+            }
+        })
+        .then(() => {
+            return getAllQuestion(req, res);
+        })
+        .catch((err) => {
+            return res.status(400).json({ err });
+        });
+};

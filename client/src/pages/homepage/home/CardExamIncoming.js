@@ -45,7 +45,7 @@ export default function CardExamIncoming({ listExam }) {
                             />
 
                             <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                Giờ mở thi: {moment(ls?.thoigianthi).format('hh:mm - MM/DD/YYYY')}
+                                Giờ mở thi: {moment(ls?.thoigianthi).format('hh:mm - DD/MM/YYYY')}
                             </Typography>
                             <Typography sx={{ mb: 1.5 }} color="text.secondary">
                                 Giáo viên: {ls?.taikhoan?.tentaikhoan}

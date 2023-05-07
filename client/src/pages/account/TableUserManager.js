@@ -125,7 +125,6 @@ export default function TableUserManager() {
     useEffect(() => {
         setListUser(users);
     }, [users]);
-
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - listUser.length) : 0;
 
@@ -162,7 +161,7 @@ export default function TableUserManager() {
                 <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
                     <TableHead>
                         <TableRow>
-                            <TableCell>Tài khoản</TableCell>
+                            <TableCell>Tên người dùng</TableCell>
                             <TableCell align="right">Email</TableCell>
                             <TableCell align="right">Giới tính</TableCell>
                             <TableCell align="right">Số điện thoại</TableCell>
@@ -195,7 +194,15 @@ export default function TableUserManager() {
                                 </TableCell>
                             </TableRow>
                         ))}
-
+                        {listUser.length === 0 ? (
+                            <TableRow style={{ height: 53 * emptyRows }}>
+                                <TableCell colSpan={6} style={{ textAlign: 'center' }}>
+                                    <h4>Không tìm thấy người dùng nào !!!</h4>
+                                </TableCell>
+                            </TableRow>
+                        ) : (
+                            <></>
+                        )}
                         {emptyRows > 0 && (
                             <TableRow style={{ height: 53 * emptyRows }}>
                                 <TableCell colSpan={6} />

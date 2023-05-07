@@ -3,7 +3,8 @@ import apiService from '../services/api.service';
 export const ACTION_TYPES = {
     FETCH_ALL_USER: 'FETCH_ALL_USER',
     USER_NOT_ACCOUNT: 'USER_NOT_ACCOUNT',
-    ADD_USER: 'ADD_USER'
+    ADD_USER: 'ADD_USER',
+    UPDATE_USER: 'UPDATE_USER'
 };
 export const getAllUser = () => (dispatch) => {
     apiService
@@ -41,4 +42,19 @@ export const addUser = (user) => (dispatch) => {
             });
         })
         .catch((err) => console.log(err));
+};
+export const updateUser = (user, id) => (dispatch) => {
+    apiService
+        .user()
+        .updateUser(user, id)
+        .then((response) => {
+            dispatch({
+                type: ACTION_TYPES.UPDATE_USER,
+                payload: response.data
+            });
+        })
+        .catch((err) => console.log(err));
+};
+export const register = (user) => {
+    return apiService.user().register(user);
 };

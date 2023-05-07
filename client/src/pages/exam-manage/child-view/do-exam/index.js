@@ -19,8 +19,8 @@ export default function DoExam() {
     return (
         <div>
             <div style={{ textAlign: 'center' }}>
-                <h2>ĐỀ THI ĐÁNH GIÁ NĂNG LỰC</h2>
-                <h4>ETS TOEIC 2022 Test 2</h4>
+                <h2>{exam?.tieude}</h2>
+                <h4>{exam?.madethi}</h4>
             </div>
             <Grid container spacing={2}>
                 <Grid

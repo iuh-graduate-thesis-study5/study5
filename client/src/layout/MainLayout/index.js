@@ -11,6 +11,7 @@ import Drawer from './Drawer';
 import Header from './Header';
 import navigation from 'menu-items';
 import Breadcrumbs from 'components/@extended/Breadcrumbs';
+import * as actions from 'actions/account.action';
 import { useNavigate } from 'react-router-dom';
 // types
 import { openDrawer } from 'store/reducers/menu';
@@ -22,7 +23,15 @@ const MainLayout = () => {
     const navigate = useNavigate();
     const matchDownLG = useMediaQuery(theme.breakpoints.down('xl'));
     const dispatch = useDispatch();
-    if (!localStorage.getItem('user_authenticated')) {
+    const account = useSelector((state) => state.account.account);
+    const user_id = useSelector((state) => state.account.userAuth);
+
+    useEffect(() => {
+        if (user_id) {
+            dispatch(actions.getAccount(user_id));
+        }
+    }, [user_id]);
+    if (localStorage.getItem('user_authenticated') == 'undefined') {
         navigate('/login');
     }
     const { drawerOpen } = useSelector((state) => state.menu);

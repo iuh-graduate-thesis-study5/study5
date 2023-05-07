@@ -81,7 +81,6 @@ export default function UserTable({ lsUser, addStudent }) {
 
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(6);
-
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - listUser.length) : 0;
 
@@ -107,11 +106,11 @@ export default function UserTable({ lsUser, addStudent }) {
                 <TableBody>
                     {(rowsPerPage > 0 ? listUser.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : listUser).map((row) => (
                         <TableRow key={row.id}>
-                            <TableCell align="left">{row.email}</TableCell>
+                            <TableCell align="left">{row?.nguoidung?.email}</TableCell>
                             <TableCell component="th" scope="row">
-                                {row.tennguoidung}
+                                {row?.nguoidung?.tennguoidung}
                             </TableCell>
-                            <TableCell align="left">{row.gioitinh}</TableCell>
+                            <TableCell align="left">{row?.nguoidung?.gioitinh}</TableCell>
                             <TableCell align="center">
                                 <IconButton aria-label="edit" size="large">
                                     <AddCircleOutlineIcon fontSize="inherit" color="primary" onClick={() => addStudent(row)} />

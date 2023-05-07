@@ -14,11 +14,14 @@ import CardPoint from './CardPoint';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import * as actions from 'actions/result.action';
 import * as exam_actions from 'actions/exam.action';
+import IconButton from '@mui/material/IconButton';
 import ExamTable from 'pages/exam-manage/ExamTable';
 import PieChartExam from './PieChart';
 import FinalExamTable from './FinalExamTable';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import moment from 'moment';
-
+import EditIcon from '@mui/icons-material/Edit';
+import { Link } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import { useState } from 'react';
 export default function DoExam() {
@@ -35,7 +38,6 @@ export default function DoExam() {
     const [listExport, setListExport] = useState([]);
     const [listPoint, setListPoint] = useState([]);
     const [listChart, setListChart] = useState([]);
-    console.log(exam_by_id);
     useEffect(() => {
         if (result) {
             const listExportResult = [];
@@ -58,7 +60,7 @@ export default function DoExam() {
                     'Số câu sai': e.socausai,
                     'Số câu bỏ qua': e.socauboqua,
                     'Tổng điểm': e.tongdiem,
-                    'Thời gian nộp bài': moment(e?.thoigiannopbai).format('hh:mm - MM/DD/YYYY')
+                    'Thời gian nộp bài': moment(e?.thoigiannopbai).format('hh:mm - DD/MM/YYYY')
                 };
                 points.push(e.tongdiem);
                 listExportResult.push(export_excel);
@@ -68,7 +70,6 @@ export default function DoExam() {
             setListPoint(points);
         }
     }, [result]);
-    console.log(listChart);
     const downloadExcel = () => {
         const headerTitle = 'Danh sách điểm sinh viên đề thi';
         const worksheet = XLSX.utils.json_to_sheet([{}], {
@@ -82,10 +83,23 @@ export default function DoExam() {
     const average = (arr) => arr.reduce((p, c) => p + c, 0) / arr.length;
     return (
         <div>
-            <div style={{ textAlign: 'left' }}>
+            <div style={{ textAlign: 'left', alignItems: 'center' }}>
                 <h4>
                     {exam_by_id?.madethi} - {exam_by_id?.tieude}
                 </h4>
+                <Link
+                    to={'/exam/view-question/' + id}
+                    style={{ textDecoration: 'none', color: 'black', alignItems: 'center', display: 'flex' }}
+                >
+                    <span style={{ color: '#1890FF' }}>
+                        <b>
+                            <i>Xem đề</i>
+                        </b>
+                    </span>
+                    <IconButton aria-label="edit" size="medium">
+                        <VisibilityIcon fontSize="inherit" color="primary" />
+                    </IconButton>
+                </Link>
             </div>
             <Grid container spacing={2}>
                 <Grid item xs={6}>

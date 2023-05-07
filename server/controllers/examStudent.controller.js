@@ -19,3 +19,14 @@ export const createExamStudent = (req, res) => {
             return res.status(400).json({ err });
         });
 };
+
+export const updateExamStudent = (req, res) => {
+    dethithisinh
+        .destroy(req.body, { where: { id_dethi: req.params.id } })
+        .then((rs) => {
+            return res.status(200).json(rs);
+        })
+        .catch((err) => {
+            return res.status(400).json({ err });
+        });
+};

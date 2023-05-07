@@ -131,10 +131,7 @@ export default function FinalExamTable() {
 
                             <TableCell align="left">{row.mota}</TableCell>
                             <TableCell align="center">
-                                <Link
-                                    to={'/exam/view-question/' + row.id}
-                                    style={{ textDecoration: 'none', color: 'black', width: '100%' }}
-                                >
+                                <Link to={'/exam/result-exam/' + row.id} style={{ textDecoration: 'none', color: 'black', width: '100%' }}>
                                     <IconButton aria-label="edit" size="large">
                                         <VisibilityIcon fontSize="inherit" color="primary" />
                                     </IconButton>

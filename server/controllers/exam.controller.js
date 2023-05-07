@@ -23,7 +23,10 @@ export const generateExam = (req, res) => {
         .then((rs) => {
             nhomcauhoi
                 .findAll({
-                    attributes: ['id', 'phancauhoi'],
+                    attributes: ['id', 'phancauhoi', 'trangthai'],
+                    where: {
+                        trangthai: 1
+                    },
                     order: [['phancauhoi', 'ASC']]
                 })
                 .then((question) => {
@@ -103,10 +106,25 @@ export const getAllExam = (req, res) => {
         .findAll({
             include: [
                 {
-                    model: taikhoan
+                    model: taikhoan,
+                    include: [
+                        {
+                            model: nguoidung
+                        }
+                    ]
                 },
                 {
-                    model: dethithisinh
+                    model: dethithisinh,
+                    include: [
+                        {
+                            model: taikhoan,
+                            include: [
+                                {
+                                    model: nguoidung
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         })
@@ -199,7 +217,6 @@ export const getExamByUserId = (req, res) => {
         });
 };
 export const getExamUser = (req, res) => {
-    console.log(req);
     dethithisinh
         .findOne({
             where: {
@@ -209,6 +226,50 @@ export const getExamUser = (req, res) => {
         })
         .then((exam) => {
             return res.status(200).json(exam);
+        })
+        .catch((err) => {
+            return res.status(400).json({ err });
+        });
+};
+
+export const deleteExam = (req, res) => {
+    dethi
+        .destroy({
+            where: {
+                id: req.params.id
+            }
+        })
+        .then(() => {
+            return getAllExam(req, res);
+        })
+        .catch((err) => {
+            return res.status(400).json({ err });
+        });
+};
+
+export const updateExam = (req, res) => {
+    dethithisinh
+        .destroy({ where: { id_dethi: req.params.id } })
+        .then((rs) => {
+            dethi
+                .update(req.body, { where: { id: req.params.id } })
+                .then((rs) => {
+                    const listStudent = [];
+                    req.body.listStudent.forEach((e) => {
+                        listStudent.push({ id_dethi: req.params.id, id_thisinh: e });
+                    });
+                    dethithisinh
+                        .bulkCreate(listStudent)
+                        .then(() => {
+                            getAllExam(req, res);
+                        })
+                        .catch((err) => {
+                            return res.status(400).json({ err });
+                        });
+                })
+                .catch((err) => {
+                    return res.status(400).json({ err });
+                });
         })
         .catch((err) => {
             return res.status(400).json({ err });

@@ -31,6 +31,8 @@ import AnimateButton from 'components/@extended/AnimateButton';
 import { useNavigate } from 'react-router-dom';
 // assets
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+import UnAcceptRegister from './UnAcceptAccount';
+import BlockAccount from './BlockAccount';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
@@ -42,6 +44,7 @@ const AuthLogin = () => {
     const [password, setPassword] = React.useState('');
     const [username, setUsername] = React.useState('');
     const [isDisplay, setIsDisplay] = React.useState(false);
+    const [failLogin, setFailLogin] = React.useState(1);
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
     };
@@ -56,14 +59,14 @@ const AuthLogin = () => {
         };
         actions.login(account).then((res) => {
             if (res && res.data[0]?.id && res.data[0]?.trangthai === 1) {
-                const user = {
-                    id: res.data[0]?.id,
-                    role: res.data[0]?.quyen
-                };
                 dispatch(actions.isAuthenticated(res.data[0].id));
                 setIsDisplay(false);
                 if (res.data[0]?.quyen === 'STUDENT') navigate('/home');
                 else navigate('/');
+            } else if (res && res.data[0]?.id && res.data[0]?.trangthai === 0) {
+                setFailLogin(0);
+            } else if (res && res.data[0]?.id && res.data[0]?.trangthai === 2) {
+                setFailLogin(2);
             } else {
                 setIsDisplay(true);
             }
@@ -71,75 +74,95 @@ const AuthLogin = () => {
     };
     return (
         <>
-            {isDisplay ? (
-                <Alert severity="error" style={{ padding: '0.5rem', marginBottom: '1rem' }}>
-                    Tên đăng nhập hoặc mật khẩu sai — <strong>Kiểm tra lại!</strong>
-                </Alert>
+            {failLogin === 1 ? (
+                <>
+                    {isDisplay ? (
+                        <Alert severity="error" style={{ padding: '0.5rem', marginBottom: '1rem' }}>
+                            Tên đăng nhập hoặc mật khẩu sai — <strong>Kiểm tra lại!</strong>
+                        </Alert>
+                    ) : (
+                        <></>
+                    )}
+
+                    <Formik>
+                        <form noValidate>
+                            <Grid container spacing={3}>
+                                <Grid item xs={12}>
+                                    <Stack spacing={1}>
+                                        <InputLabel htmlFor="email-login">Tên đăng nhập</InputLabel>
+                                        <OutlinedInput
+                                            id="email-login"
+                                            type="text"
+                                            name="email"
+                                            onChange={(event) => setUsername(event.target.value)}
+                                            placeholder="Nhập tài khoản"
+                                            fullWidth
+                                        />
+                                    </Stack>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Stack spacing={1}>
+                                        <InputLabel htmlFor="password-login">Mật khẩu</InputLabel>
+                                        <OutlinedInput
+                                            fullWidth
+                                            id="-password-login"
+                                            type={showPassword ? 'text' : 'password'}
+                                            name="password"
+                                            onChange={(event) => setPassword(event.target.value)}
+                                            endAdornment={
+                                                <InputAdornment position="end">
+                                                    <IconButton
+                                                        aria-label="toggle password visibility"
+                                                        onClick={handleClickShowPassword}
+                                                        onMouseDown={handleMouseDownPassword}
+                                                        edge="end"
+                                                        size="large"
+                                                    >
+                                                        {showPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            }
+                                            placeholder="Nhập mật khẩu"
+                                        />
+                                    </Stack>
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    <AnimateButton>
+                                        <Button
+                                            onClick={onLogin}
+                                            disableElevation
+                                            fullWidth
+                                            size="large"
+                                            type="button"
+                                            variant="contained"
+                                            color="primary"
+                                        >
+                                            Đăng nhập
+                                        </Button>
+                                    </AnimateButton>
+                                </Grid>
+                            </Grid>
+                        </form>
+                    </Formik>
+                </>
+            ) : failLogin === 0 ? (
+                <>
+                    <BlockAccount />
+                    <Typography onClick={() => setFailLogin(1)} color="primary" style={{ cursor: 'pointer' }}>
+                        Quay lại trang đăng nhập
+                    </Typography>
+                </>
+            ) : failLogin === 2 ? (
+                <>
+                    <UnAcceptRegister />
+                    <Typography onClick={() => setFailLogin(1)} color="primary" style={{ cursor: 'pointer' }}>
+                        Quay lại trang đăng nhập
+                    </Typography>
+                </>
             ) : (
                 <></>
             )}
-
-            <Formik>
-                <form noValidate>
-                    <Grid container spacing={3}>
-                        <Grid item xs={12}>
-                            <Stack spacing={1}>
-                                <InputLabel htmlFor="email-login">Tên đăng nhập</InputLabel>
-                                <OutlinedInput
-                                    id="email-login"
-                                    type="text"
-                                    name="email"
-                                    onChange={(event) => setUsername(event.target.value)}
-                                    placeholder="Nhập tài khoản"
-                                    fullWidth
-                                />
-                            </Stack>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Stack spacing={1}>
-                                <InputLabel htmlFor="password-login">Mật khẩu</InputLabel>
-                                <OutlinedInput
-                                    fullWidth
-                                    id="-password-login"
-                                    type={showPassword ? 'text' : 'password'}
-                                    name="password"
-                                    onChange={(event) => setPassword(event.target.value)}
-                                    endAdornment={
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                                aria-label="toggle password visibility"
-                                                onClick={handleClickShowPassword}
-                                                onMouseDown={handleMouseDownPassword}
-                                                edge="end"
-                                                size="large"
-                                            >
-                                                {showPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
-                                            </IconButton>
-                                        </InputAdornment>
-                                    }
-                                    placeholder="Nhập mật khẩu"
-                                />
-                            </Stack>
-                        </Grid>
-
-                        <Grid item xs={12}>
-                            <AnimateButton>
-                                <Button
-                                    onClick={onLogin}
-                                    disableElevation
-                                    fullWidth
-                                    size="large"
-                                    type="button"
-                                    variant="contained"
-                                    color="primary"
-                                >
-                                    Đăng nhập
-                                </Button>
-                            </AnimateButton>
-                        </Grid>
-                    </Grid>
-                </form>
-            </Formik>
         </>
     );
 };

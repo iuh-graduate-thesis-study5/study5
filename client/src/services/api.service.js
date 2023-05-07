@@ -1,3 +1,4 @@
+import { register } from 'actions/account.action';
 import axios from 'axios';
 
 const baseApi = 'http://localhost:8800/api/';
@@ -17,7 +18,9 @@ export default {
         return {
             fetchAllUser: () => axios.get(url + 'get-all-user'),
             fetchAllUserNotAccount: () => axios.get(url + 'user-not-account'),
-            addUser: (user) => axios.post(url + 'add-user', user)
+            addUser: (user) => axios.post(url + 'add-user', user),
+            register: (user) => axios.post(url + 'register', user),
+            updateUser: (user, id) => axios.put(url + 'update-user/' + id, user)
         };
     },
     question(url = baseApi + 'question/') {
@@ -28,7 +31,8 @@ export default {
     groupQuestion(url = baseApi + 'groupquestion/') {
         return {
             addGroupQuestion: (groupQuestion) => axios.post(url + 'add-group-question', groupQuestion),
-            listGroupQuestion: () => axios.get(url + 'get-all-questions')
+            listGroupQuestion: () => axios.get(url + 'get-all-questions'),
+            deleteQuestion: (question, id) => axios.post(url + 'delete-question/' + id, question)
         };
     },
     answer(url = baseApi + 'answer/') {
@@ -47,7 +51,9 @@ export default {
             getExamById: (id) => axios.get(url + 'get-exam-by-id/' + id),
             createExam: (exam) => axios.post(url + 'generate-exam', exam),
             getExamByUserId: (id) => axios.get(url + 'get-exam-by-user-id/' + id),
-            getExamUserId: (ids) => axios.post(url + 'get-exam-user', ids)
+            getExamUserId: (ids) => axios.post(url + 'get-exam-user', ids),
+            deleteExam: (id) => axios.delete(url + 'delete-exam/' + id),
+            updateExam: (exam, id) => axios.post(url + 'update-exam/' + id, exam)
         };
     },
     examStudent(url = baseApi + 'exam-student/') {

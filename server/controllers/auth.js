@@ -62,13 +62,20 @@ export const logout = (req, res) => {
 
 export const getAllAccount = (req, res) => {
     //CHECK USER
-
-    const q = 'SELECT * FROM taikhoan tk inner join nguoidung nd on tk.id_nguoidung = nd.id';
-    db.query(q, [req.query.cat], (err, data) => {
-        if (err) return res.status(500).send(err);
-
-        return res.status(200).json(data);
-    });
+    taikhoan
+        .findAll({
+            include: [
+                {
+                    model: nguoidung
+                }
+            ]
+        })
+        .then((exam) => {
+            return res.status(200).json(exam);
+        })
+        .catch((err) => {
+            return res.status(400).json({ err });
+        });
 };
 
 export const updateAccount = (req, res) => {

@@ -47,7 +47,7 @@ const ManageRoutes = {
             element: <FinalExam />
         },
         {
-            path: 'exam/result-exam',
+            path: 'exam/result-exam/:id',
             element: <ResultExam />
         },
         {
