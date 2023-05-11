@@ -4,7 +4,7 @@ export const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: 'password',
-    database: 's5test',
+    database: 'study-five',
 
     multipleStatements: true
 });
@@ -15,4 +15,4 @@ var opts = {
     }
 };
 
-export const sequelize = new Sequelize('mysql://root:password@localhost:3306/s5test', opts);
+export const sequelize = new Sequelize('mysql://root:password@localhost:3306/study-five', opts);

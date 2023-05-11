@@ -110,22 +110,24 @@ export default function PopUpEdit({ open, exam, handleCloseEdit }) {
     const generateExam = (e) => {
         e.preventDefault();
         const listIdStudent = [];
+        for (let i = 0; i < listStudent.length; i++) {
+            listIdStudent.push(listStudent[i].id);
+        }
         if (values.tieude.length == 0) {
             window.alert('Vui lòng nhập tiêu đề');
             return;
         }
-        if (moment(value.$d).isBefore(moment(Date.now()))) {
-            window.alert('Vui lòng thêm thí sinh cho bài thi này');
-            return;
-        }
-        if (type === 0 && listStudent.length === 0) {
-            window.alert('Vui lòng thêm thí sinh cho bài thi này');
-            return;
+        if (!type) {
+            if (moment(value.$d).isBefore(moment(Date.now()))) {
+                window.alert('Vui lòng chọn giờ thi lớn hơn hiện tại');
+                return;
+            }
+            if (listStudent.length === 0) {
+                window.alert('Vui lòng thêm thí sinh cho bài thi này');
+                return;
+            }
         }
 
-        for (let i = 0; i < listStudent.length; i++) {
-            listIdStudent.push(listStudent[i].id);
-        }
         values.thoigianthi = value;
         values.loaidethi = type;
         values.listStudent = listIdStudent;
@@ -197,7 +199,7 @@ export default function PopUpEdit({ open, exam, handleCloseEdit }) {
                                         <LocalizationProvider dateAdapter={AdapterDayjs} style={{ padding: 0 }}>
                                             <DemoContainer components={['DateTimePicker', 'DateTimePicker']} style={{ padding: 0 }}>
                                                 <DateTimePicker
-                                                    format="DD/MM/YYYY - hh:mm"
+                                                    format="DD/MM/YYYY - hh:mm a"
                                                     value={value}
                                                     onChange={(newValue) => setValue(newValue)}
                                                 />

@@ -144,7 +144,6 @@ export default function TestExamTable() {
                             <TableCell align="left">Tên đề thi</TableCell>
                             <TableCell align="left">Người tạo</TableCell>
                             <TableCell align="left">Ngày tạo</TableCell>
-                            <TableCell align="left">Thời gian thi</TableCell>
                             <TableCell align="left">Ghi chú</TableCell>
                             <TableCell align="center"></TableCell>
                         </TableRow>
@@ -158,7 +157,6 @@ export default function TestExamTable() {
                                 <TableCell component="th" scope="row">
                                     {moment(row.ngaytao).format('DD/MM/YYYY')}
                                 </TableCell>
-                                <TableCell align="left">{moment(row.thoigianthi).format('hh:mm - DD/MM/YYYY')}</TableCell>
                                 <TableCell align="left">{row.mota}</TableCell>
                                 <TableCell align="center">
                                     <Link

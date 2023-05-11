@@ -44,7 +44,7 @@ export default function ReSultExam() {
                         header={'Thông tin kết quả thi'}
                         user={result?.dethithisinh?.taikhoan?.nguoidung?.tennguoidung}
                         point={result?.tongdiem}
-                        percent={(result?.socaudung * 100) / 51}
+                        percent={((result?.socaudung * 100) / 51).toFixed(2)}
                     />
                 </Grid>
                 <Grid item xs={2.6}>
@@ -68,7 +68,7 @@ export default function ReSultExam() {
                     <AlertTitle style={{ marginBlockStart: 0, marginBlockEnd: 0 }}>Tips</AlertTitle>
                     <p style={{ marginBlockStart: 0, marginBlockEnd: 0 }}>
                         Khi xem chi tiết đáp án, bạn có thể kiểm tra kết quả có đúng không. bạn có thể xem sửa câu hỏi hoặc bổ sung trong
-                        thương lai
+                        tương lai
                     </p>
                 </Alert>
                 <Grid container spacing={2}>

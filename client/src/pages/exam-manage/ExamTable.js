@@ -95,7 +95,7 @@ export default function ExamTable() {
             exams.forEach((e) => {
                 var date = Date.now();
                 const newDateObj = moment(e.thoigianthi).add(60, 'm').toDate();
-                if (moment(date).isBefore(newDateObj)) {
+                if (moment(date).isBefore(newDateObj) && !e.loaidethi) {
                     listNowExam.push(e);
                 }
             });

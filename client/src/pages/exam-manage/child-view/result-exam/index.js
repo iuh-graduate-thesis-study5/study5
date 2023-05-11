@@ -44,7 +44,7 @@ export default function ReSultExam() {
                         header={'Thông tin kết quả thi'}
                         user={result?.dethithisinh?.taikhoan?.nguoidung?.tennguoidung}
                         point={result?.tongdiem}
-                        percent={(result?.socaudung * 100) / 51}
+                        percent={((result?.socaudung * 100) / 51).toFixed(2)}
                     />
                 </Grid>
                 <Grid item xs={2.6}>

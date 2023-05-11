@@ -26,7 +26,7 @@ export const addResult = (req, res) => {
         }
     });
     const rs = {
-        tongdiem: correctAnswer * 5,
+        tongdiem: correctAnswer * 10,
         socaudung: correctAnswer,
         socausai: wrongAnswer,
         socauboqua: skipAnswer,

@@ -113,9 +113,9 @@ export default function DoExam() {
                 <Grid item xs={6}>
                     <CardPoint
                         header={'Sơ lược điểm'}
-                        max={Math.max(...listPoint)}
-                        min={Math.min(...listPoint)}
-                        avg={parseFloat(average(listPoint)).toFixed(2)}
+                        max={listPoint.length ? Math.max(...listPoint) : 0}
+                        min={listPoint.length ? Math.min(...listPoint) : 0}
+                        avg={average(listPoint) ? parseFloat(average(listPoint)).toFixed(2) : 0}
                     />
                 </Grid>
                 <Grid item xs={12} style={{ textAlign: 'right' }}>

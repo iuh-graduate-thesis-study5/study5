@@ -98,7 +98,6 @@ export default function AccountButtonComponent() {
             const listExistedUserId = [];
             exams.forEach((e) => {
                 if (moment(e.thoigianthi).format('DD/MM/YYYY') === moment(value.$d).format('DD/MM/YYYY')) {
-                    console.log(e);
                     e?.dethithisinhs?.forEach((elm) => {
                         listExistedUserId.push(elm?.taikhoan?.nguoidung?.id);
                     });
@@ -115,18 +114,21 @@ export default function AccountButtonComponent() {
             window.alert('Vui lòng nhập tiêu đề');
             return;
         }
-        if (moment(value.$d).isBefore(moment(Date.now()))) {
-            window.alert('Vui lòng chọn giờ thi lớn hơn hiện tại');
-            return;
-        }
-        if (type === 0 && listStudent.length === 0) {
-            window.alert('Vui lòng thêm thí sinh cho bài thi này');
-            return;
-        }
-
+        console.log(listStudent);
         for (let i = 0; i < listStudent.length; i++) {
             listIdStudent.push(listStudent[i].id);
         }
+        if (!type) {
+            if (moment(value.$d).isBefore(moment(Date.now()))) {
+                window.alert('Vui lòng chọn giờ thi lớn hơn hiện tại');
+                return;
+            }
+            if (listStudent.length === 0) {
+                window.alert('Vui lòng thêm thí sinh cho bài thi này');
+                return;
+            }
+        }
+
         values.id_nguoitao = user_id;
         values.thoigianthi = value;
         values.loaidethi = type;
