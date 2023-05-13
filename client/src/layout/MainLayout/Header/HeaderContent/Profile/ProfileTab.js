@@ -8,17 +8,20 @@ import HomeIcon from '@mui/icons-material/Home';
 import { useNavigate } from 'react-router-dom';
 // assets
 import { EditOutlined, ProfileOutlined, LogoutOutlined, UserOutlined, WalletOutlined, HomeOutlined } from '@ant-design/icons';
-
+import * as actions from 'actions/account.action';
+import { useDispatch } from 'react-redux';
 // ==============================|| HEADER PROFILE - PROFILE TAB ||============================== //
 
 const ProfileTab = ({ handleLogout }) => {
     const theme = useTheme();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [selectedIndex, setSelectedIndex] = useState(0);
     const handleListItemClick = (event, index) => {
         setSelectedIndex(index);
     };
     const Logout = () => {
+        dispatch(actions.Logout());
         navigate('/login');
     };
     const handleChangHome = () => {
@@ -31,12 +34,6 @@ const ProfileTab = ({ handleLogout }) => {
                     <HomeOutlined />
                 </ListItemIcon>
                 <ListItemText primary="Trang chủ" />
-            </ListItemButton>
-            <ListItemButton selected={selectedIndex === 1} onClick={(event) => handleListItemClick(event, 1)}>
-                <ListItemIcon>
-                    <UserOutlined />
-                </ListItemIcon>
-                <ListItemText primary="Thông tin cá nhân" />
             </ListItemButton>
             <ListItemButton selected={selectedIndex === 2} onClick={() => Logout()}>
                 <ListItemIcon>

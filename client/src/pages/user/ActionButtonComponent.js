@@ -12,7 +12,7 @@ import Formsy from 'formsy-react';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as action from 'actions/user.action';
 
 const initialFieldValues = {
@@ -24,34 +24,45 @@ const initialFieldValues = {
 };
 export default function AccountButtonComponent() {
     const dispatch = useDispatch();
+    const users = useSelector((state) => state.user.listUser);
+
+    React.useEffect(() => {
+        dispatch(action.getAllUser());
+    }, []);
+
+    const [listUser, setListUser] = React.useState([]);
+
+    React.useEffect(() => {
+        setListUser(users);
+    }, [users]);
+
     const [open, setOpen] = React.useState(false);
     const validate = (fieldValues = values) => {
         let temp = { ...errors };
-        // if ('ten' in fieldValues) {
-        //     let err = 0;
-        //     listCategoryShow.map((u) => {
-        //         if (u.ten.toLowerCase() === fieldValues.ten.toLowerCase() && fieldValues.ten !== tenLp) {
-        //             err = err + 1;
-        //         }
-        //     });
-        //     if (err >= 1) {
-        //         err < 1 ? (temp.ten = '') : (temp.ten = 'Loại phòng này đã có');
-        //     } else if (fieldValues.ten === '') {
-        //         temp.ten = fieldValues.ten ? '' : 'Tên khách sạn không được để trống';
-        //     } else if (fieldValues.ten !== '') {
-        //         temp.ten =
-        //             /^[a-zA-ZàáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉịòóõọỏôốồổỗộơớờởỡợùúũụủưứừửữựỳỵỷỹýÀÁÃẠẢĂẮẰẲẴẶÂẤẦẨẪẬÈÉẸẺẼÊỀẾỂỄỆĐÌÍĨỈỊÒÓÕỌỎÔỐỒỔỖỘƠỚỜỞỠỢÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ]{1,15}(?: [a-zA-ZàáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉịòóõọỏôốồổỗộơớờởỡợùúũụủưứừửữựỳỵỷỹýÀÁÃẠẢĂẮẰẲẴẶÂẤẦẨẪẬÈÉẸẺẼÊỀẾỂỄỆĐÌÍĨỈỊÒÓÕỌỎÔỐỒỔỖỘƠỚỜỞỠỢÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ]+){0,6}$/.test(
-        //                 fieldValues.ten
-        //             )
-        //                 ? ''
-        //                 : 'Tên khách sạn không chứa chữ số hoặc kí tự đặc biệt';
-        //     }
-        // }
+
         if ('tennguoidung' in fieldValues) {
-            temp.tennguoidung = fieldValues.tennguoidung ? '' : 'Số người không được để trống';
+            temp.tennguoidung = fieldValues.tennguoidung ? '' : 'Tên người dùng không được để trống';
         }
         if ('email' in fieldValues) {
-            temp.email = fieldValues.email ? '' : 'Email không được để trống';
+            let err = 0;
+            listUser.map((u) => {
+                if (u.email.toLowerCase() === fieldValues.email.toLowerCase()) {
+                    err = err + 1;
+                }
+            });
+            if (err >= 1) {
+                err < 1 ? (temp.email = '') : (temp.email = 'Email này đã được đăng kí');
+            } else if (fieldValues.ten === '') {
+                temp.email = fieldValues.email ? '' : 'Email không được để trống';
+            } else if (fieldValues.ten !== '') {
+                temp.email = fieldValues.email ? '' : 'Email không được để trống';
+            }
+        }
+        if ('sodienthoai' in fieldValues) {
+            temp.sodienthoai = fieldValues.sodienthoai ? '' : 'Số điện thoại không được để trống';
+        }
+        if ('matkhau' in fieldValues) {
+            temp.matkhau = fieldValues.matkhau.length > 6 ? '' : 'Mật khẩu phải từ 6 kí tự';
         }
         setErrors({
             ...temp

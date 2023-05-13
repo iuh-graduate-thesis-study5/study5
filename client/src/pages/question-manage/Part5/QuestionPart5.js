@@ -8,7 +8,6 @@ import 'css/question.css';
 import Chip from '@mui/material/Chip';
 
 export default function QuestionPart5({ detailGroupQuestion }) {
-    console.log(detailGroupQuestion);
     return (
         <>
             <Chip label="#Part 5" color="primary" />

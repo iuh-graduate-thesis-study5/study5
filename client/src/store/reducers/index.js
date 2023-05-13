@@ -6,6 +6,7 @@ import { userReducer } from 'reducers/user.reducer';
 import { questionReducer } from 'reducers/question.reducer';
 import { groupQuestionReducer } from 'reducers/groupquestion.reducer';
 import { examReducer } from 'reducers/exam.reducer';
+import { resultReducer } from 'reducers/result.reducer';
 
 // project import
 import menu from './menu';
@@ -18,7 +19,8 @@ const reducers = combineReducers({
     user: userReducer,
     question: questionReducer,
     gquestion: groupQuestionReducer,
-    exam: examReducer
+    exam: examReducer,
+    result: resultReducer
 });
 
 export default reducers;

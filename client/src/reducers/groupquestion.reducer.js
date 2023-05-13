@@ -16,6 +16,11 @@ export const groupQuestionReducer = (state = initialState, action) => {
                 ...state,
                 listGroupQuestion: [...action.payload]
             };
+        case ACTION_TYPES.DELETE_QUESTION:
+            return {
+                ...state,
+                listGroupQuestion: [...action.payload]
+            };
         default:
             return state;
     }

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -18,13 +18,13 @@ import {
     Tabs,
     Typography
 } from '@mui/material';
-
+import { useSelector, useDispatch } from 'react-redux';
 // project import
 import MainCard from 'components/MainCard';
 import Transitions from 'components/@extended/Transitions';
 import ProfileTab from './ProfileTab';
 import SettingTab from './SettingTab';
-
+import * as actions from 'actions/account.action';
 // assets
 import avatar1 from 'assets/images/users/avatar-1.png';
 import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
@@ -44,28 +44,27 @@ TabPanel.propTypes = {
     value: PropTypes.any.isRequired
 };
 
-function a11yProps(index) {
-    return {
-        id: `profile-tab-${index}`,
-        'aria-controls': `profile-tabpanel-${index}`
-    };
-}
-
 // ==============================|| HEADER CONTENT - PROFILE ||============================== //
 
 const Profile = () => {
     const theme = useTheme();
-
+    const dispatch = useDispatch();
     const handleLogout = async () => {
         // logout
     };
+    const account = useSelector((state) => state.account.account);
+    const user_id = useSelector((state) => state.account.userAuth);
 
+    useEffect(() => {
+        if (user_id) {
+            dispatch(actions.getAccount(user_id));
+        }
+    }, [user_id]);
     const anchorRef = useRef(null);
     const [open, setOpen] = useState(false);
     const handleToggle = () => {
         setOpen((prevOpen) => !prevOpen);
     };
-
     const handleClose = (event) => {
         if (anchorRef.current && anchorRef.current.contains(event.target)) {
             return;
@@ -97,8 +96,8 @@ const Profile = () => {
                 onClick={handleToggle}
             >
                 <Stack direction="row" spacing={2} alignItems="center" sx={{ p: 0.5 }}>
-                    <Avatar alt="profile user" src={avatar1} sx={{ width: 32, height: 32 }} />
-                    <Typography variant="subtitle1">Quản trị viên</Typography>
+                    <Avatar alt={account?.nguoidung?.tennguoidung} src={account?.avatar} sx={{ width: 32, height: 32 }} />
+                    <Typography variant="subtitle1">{account?.nguoidung?.tennguoidung}</Typography>
                 </Stack>
             </ButtonBase>
             <Popper
@@ -139,9 +138,15 @@ const Profile = () => {
                                             <Grid container justifyContent="space-between" alignItems="center">
                                                 <Grid item>
                                                     <Stack direction="row" spacing={1.25} alignItems="center">
-                                                        <Avatar alt="profile user" src={avatar1} sx={{ width: 32, height: 32 }} />
+                                                        <Avatar
+                                                            alt={account?.nguoidung?.tennguoidung}
+                                                            src={account?.avatar}
+                                                            sx={{ width: 32, height: 32 }}
+                                                        />
                                                         <Stack>
-                                                            <Typography variant="h6">Quản trị viên</Typography>
+                                                            <Typography variant="h6">
+                                                                <b>{account?.quyen}</b>
+                                                            </Typography>
                                                         </Stack>
                                                     </Stack>
                                                 </Grid>

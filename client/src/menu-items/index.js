@@ -9,5 +9,4 @@ import support from './support';
 const menuItems = {
     items: [dashboard, pages]
 };
-
 export default menuItems;

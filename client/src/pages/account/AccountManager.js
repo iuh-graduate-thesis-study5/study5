@@ -26,7 +26,8 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-
+import SearchIcon from '@mui/icons-material/Search';
+import { TextField, InputAdornment } from '@mui/material';
 //Action
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from 'actions/account.action';
@@ -108,7 +109,7 @@ export default function AccountTable({ isAction }) {
     const [detailAccount, setDetailAccount] = React.useState({});
     const [role, setRole] = React.useState('STUDENT');
     const [status, setStatus] = React.useState(0);
-
+    const [count, setCount] = React.useState([0, 0, 0]);
     const account = useSelector((state) => state.account.listAccount);
 
     useEffect(() => {
@@ -116,7 +117,26 @@ export default function AccountTable({ isAction }) {
     }, []);
 
     useEffect(() => {
-        setListAccount(account);
+        if (account) {
+            const listAcc = [];
+            let teacher = 0;
+            let admin = 0;
+            let student = 0;
+            account.forEach((e) => {
+                if (e.trangthai != 2) {
+                    listAcc.push(e);
+                }
+                if (e.quyen === 'TEACHER') {
+                    teacher += 1;
+                } else if (e.quyen === 'STUDENT') {
+                    student += 1;
+                } else {
+                    admin += 1;
+                }
+            });
+            setCount([admin, teacher, student]);
+            setListAccount(listAcc);
+        }
     }, [account]);
 
     // Avoid a layout jump when reaching the last page with empty rows.
@@ -154,14 +174,81 @@ export default function AccountTable({ isAction }) {
         };
         dispatch(actions.updateAccount(account_update, detailAccount?.id));
     };
-    // const onFind = (e) => {
-    //     if (listAccount) {
-    //         let rl = listAccount.filter((fb) => fb.tentaikhoan.toLowerCase().includes(e.target.value.toLowerCase()));
-    //         setListAccount(rl);
-    //     }
-    // };
+    const onFind = (e) => {
+        if (account) {
+            let rl = account.filter((fb) => fb.tentaikhoan.toLowerCase().includes(e.target.value.toLowerCase()) && fb.trangthai != 2);
+            setListAccount(rl);
+        }
+    };
     return (
         <>
+            {!isAction ? (
+                <div
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        width: '100%',
+                        textAlign: 'right',
+                        marginBottom: 10
+                    }}
+                >
+                    <div
+                        style={{
+                            display: 'flex'
+                        }}
+                    >
+                        <div
+                            style={{ width: 20, height: 20, marginRight: 5, backgroundColor: '#FAAD14', border: '1px solid #c3c3c3' }}
+                        ></div>{' '}
+                        <b>Admin: {count[0]}</b>
+                        <div
+                            style={{
+                                width: 20,
+                                height: 20,
+                                marginLeft: 30,
+                                marginRight: 5,
+                                backgroundColor: '#1890FF',
+                                border: '1px solid #c3c3c3'
+                            }}
+                        ></div>{' '}
+                        <b>Giáo viên: {count[1]}</b>
+                        <div
+                            style={{
+                                width: 20,
+                                height: 20,
+                                marginLeft: 30,
+                                marginRight: 5,
+                                backgroundColor: '#13C2C2',
+                                border: '1px solid #c3c3c3'
+                            }}
+                        ></div>{' '}
+                        <b>Học sinh: {count[2]}</b>
+                    </div>
+                    <div>
+                        <TextField
+                            style={{ width: 300 }}
+                            size="small"
+                            type={'text'}
+                            name="matkhau"
+                            placeholder="Nhập tên tài khoản cần tìm"
+                            onChange={onFind}
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton aria-label="toggle password visibility" edge="end" size="large">
+                                            <SearchIcon />
+                                        </IconButton>
+                                    </InputAdornment>
+                                )
+                            }}
+                        />
+                    </div>
+                </div>
+            ) : (
+                <></>
+            )}
+
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
                     <TableHead>
@@ -207,31 +294,44 @@ export default function AccountTable({ isAction }) {
                                 </TableRow>
                             )
                         )}
-
+                        {listAccount.length === 0 ? (
+                            <TableRow style={{ height: 53 * emptyRows }}>
+                                <TableCell colSpan={6} style={{ textAlign: 'center' }}>
+                                    <h4>Không tìm thấy tài khoản nào !!!</h4>
+                                </TableCell>
+                            </TableRow>
+                        ) : (
+                            <></>
+                        )}
                         {emptyRows > 0 && (
                             <TableRow style={{ height: 53 * emptyRows }}>
                                 <TableCell colSpan={6} />
                             </TableRow>
                         )}
                     </TableBody>
-                    <TableFooter>
-                        <TablePagination
-                            rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                            colSpan={5}
-                            count={rows.length}
-                            rowsPerPage={rowsPerPage}
-                            page={page}
-                            SelectProps={{
-                                inputProps: {
-                                    'aria-label': 'rows per page'
-                                },
-                                native: true
-                            }}
-                            onPageChange={handleChangePage}
-                            onRowsPerPageChange={handleChangeRowsPerPage}
-                            ActionsComponent={TablePaginationActions}
-                        />
-                    </TableFooter>
+                    {!isAction ? (
+                        <TableFooter>
+                            <TablePagination
+                                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+                                colSpan={5}
+                                count={rows.length}
+                                labelRowsPerPage={'Số dòng trên 1 trang'}
+                                rowsPerPage={rowsPerPage}
+                                page={page}
+                                SelectProps={{
+                                    inputProps: {
+                                        'aria-label': 'rows per page'
+                                    },
+                                    native: true
+                                }}
+                                onPageChange={handleChangePage}
+                                onRowsPerPageChange={handleChangeRowsPerPage}
+                                ActionsComponent={TablePaginationActions}
+                            />
+                        </TableFooter>
+                    ) : (
+                        <></>
+                    )}
                 </Table>
             </TableContainer>
             <Dialog open={open} onClose={handleClose}>

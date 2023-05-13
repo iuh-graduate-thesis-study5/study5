@@ -2,7 +2,8 @@ import apiService from '../services/api.service';
 
 export const ACTION_TYPES = {
     FETCH_ALL_GROUP_QUESTION: 'FETCH_ALL_GROUP_QUESTION',
-    ADD_ANSWER: 'ADD_ANSWER'
+    ADD_ANSWER: 'ADD_ANSWER',
+    DELETE_QUESTION: 'DELETE_QUESTION'
 };
 
 export const addGroupQuestion = (groupQuestion) => {
@@ -28,6 +29,19 @@ export const getAllGroupQuestion = () => (dispatch) => {
         .then((response) => {
             dispatch({
                 type: ACTION_TYPES.FETCH_ALL_GROUP_QUESTION,
+                payload: response.data
+            });
+        })
+        .catch((err) => console.log(err));
+};
+
+export const deleteQuestion = (question, id) => (dispatch) => {
+    apiService
+        .groupQuestion()
+        .deleteQuestion(question, id)
+        .then((response) => {
+            dispatch({
+                type: ACTION_TYPES.DELETE_QUESTION,
                 payload: response.data
             });
         })

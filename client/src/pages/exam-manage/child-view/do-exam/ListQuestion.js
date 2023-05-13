@@ -14,10 +14,8 @@ export default function ListQuestion() {
 
     useEffect(() => {
         setListQuestion(questions);
-        console.log('hâ');
     }, [questions]);
     // Renderer callback with condition
-    // console.log(questions);
     const renderer = ({ minutes, seconds, completed }) => {
         if (completed) {
             // Render a complete state

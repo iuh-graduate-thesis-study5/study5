@@ -14,6 +14,7 @@ import BallotIcon from '@mui/icons-material/Ballot';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import QuizIcon from '@mui/icons-material/Quiz';
+import { useEffect } from 'react';
 
 // icons
 const icons = {
@@ -34,7 +35,7 @@ const icons = {
 // ==============================|| MENU ITEMS - EXTRA PAGES ||============================== //
 
 const pages = {
-    id: 'authentication',
+    id: 'manage',
     title: 'Quản lý',
     type: 'group',
     children: [
@@ -62,22 +63,6 @@ const pages = {
             icon: icons.ReconciliationOutlined,
             target: false
         },
-        // {
-        //     id: 'loaicauhoi',
-        //     title: 'Loại phần thi',
-        //     type: 'item',
-        //     url: '/user',
-        //     icon: icons.MenuBookIcon,
-        //     target: false
-        // },
-        // {
-        //     id: 'phanthi',
-        //     title: 'Phần thi',
-        //     type: 'item',
-        //     url: '/user',
-        //     icon: icons.AccountTreeIcon,
-        //     target: false
-        // },
         {
             id: 'cauhoi',
             title: 'Câu hỏi',

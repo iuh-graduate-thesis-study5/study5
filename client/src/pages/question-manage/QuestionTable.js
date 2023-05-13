@@ -26,6 +26,7 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import DeleteIcon from '@mui/icons-material/Delete';
 import moment from 'moment';
 import Part1 from './Part1/index';
 import Part2 from './Part2/index';
@@ -42,7 +43,7 @@ import * as actions from 'actions/groupquestion.action';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import TableHead from '@mui/material/TableHead';
-
+import VisibilityIcon from '@mui/icons-material/Visibility';
 function TablePaginationActions(props) {
     const theme = useTheme();
     const { count, page, rowsPerPage, onPageChange } = props;
@@ -152,6 +153,20 @@ export default function QuestionTable() {
     //         setListGroupQuestion(rl);
     //     }
     // };
+    const [openDelete, setOpenDelete] = React.useState(false);
+    const [questionId, setQuestionId] = React.useState({});
+    const handleClickOpenDelete = (id) => {
+        setQuestionId(id);
+        setOpenDelete(true);
+    };
+
+    const handleCloseDelete = () => {
+        setOpenDelete(false);
+    };
+    const deleteQuestion = () => {
+        dispatch(actions.deleteQuestion({ trangthai: 0 }, questionId));
+        handleCloseDelete();
+    };
     return (
         <>
             <TableContainer component={Paper}>
@@ -162,7 +177,7 @@ export default function QuestionTable() {
                             <TableCell align="center">Phần thi</TableCell>
                             <TableCell align="center">Người tạo</TableCell>
                             <TableCell align="center">Ngày tạo</TableCell>
-                            <TableCell></TableCell>
+                            <TableCell>Hành động</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -209,11 +224,14 @@ export default function QuestionTable() {
                                     Admin
                                 </TableCell>
                                 <TableCell style={{ width: 160 }} align="center">
-                                    {moment(row).format('MM/DD/YYYY')}
+                                    {moment(row).format('DD/MM/YYYY')}
                                 </TableCell>
                                 <TableCell style={{ width: 160 }} align="center">
                                     <IconButton aria-label="delete" size="large" onClick={() => handleClickOpen(row)}>
-                                        <EditIcon fontSize="inherit" color="primary" />
+                                        <VisibilityIcon fontSize="inherit" color="primary" />
+                                    </IconButton>
+                                    <IconButton aria-label="delete" size="large" onClick={() => handleClickOpenDelete(row.id)}>
+                                        <DeleteIcon fontSize="inherit" color="error" />
                                     </IconButton>
                                 </TableCell>
                             </TableRow>
@@ -274,6 +292,27 @@ export default function QuestionTable() {
                 <DialogActions>
                     <Button onClick={handleClose} color="error" variant="contained" size="medium">
                         Đóng
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                fullWidth={true}
+                maxWidth={'xs'}
+                open={openDelete}
+                onClose={handleCloseDelete}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">{'Hành động này sẽ xóa vĩnh viên câu hỏi'}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">Bạn có chắc xóa câu hỏi này ?</DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button variant="outlined" onClick={deleteQuestion} color="error">
+                        Xóa
+                    </Button>
+                    <Button variant="outlined" onClick={handleCloseDelete}>
+                        Hủy
                     </Button>
                 </DialogActions>
             </Dialog>

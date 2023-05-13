@@ -1,3 +1,4 @@
+import { register } from 'actions/account.action';
 import axios from 'axios';
 
 const baseApi = 'http://localhost:8800/api/';
@@ -8,14 +9,18 @@ export default {
             fetchAll: () => axios.get(url + 'get-all-account'),
             login: (account) => axios.post(url + 'login', account),
             register: (account) => axios.post(url + 'register', account),
-            editAccount: (account, id) => axios.put(url + id, account)
+            getAccount: (id) => axios.get(url + 'get-account/' + id),
+            editAccount: (account, id) => axios.put(url + id, account),
+            updateAccount: (account, id, id_nguoidung) => axios.put(url + 'update-account/' + id + '&&' + id_nguoidung, account)
         };
     },
     user(url = baseApi + 'users/') {
         return {
             fetchAllUser: () => axios.get(url + 'get-all-user'),
             fetchAllUserNotAccount: () => axios.get(url + 'user-not-account'),
-            addUser: (user) => axios.post(url + 'add-user', user)
+            addUser: (user) => axios.post(url + 'add-user', user),
+            register: (user) => axios.post(url + 'register', user),
+            updateUser: (user, id) => axios.put(url + 'update-user/' + id, user)
         };
     },
     question(url = baseApi + 'question/') {
@@ -26,7 +31,8 @@ export default {
     groupQuestion(url = baseApi + 'groupquestion/') {
         return {
             addGroupQuestion: (groupQuestion) => axios.post(url + 'add-group-question', groupQuestion),
-            listGroupQuestion: () => axios.get(url + 'get-all-questions')
+            listGroupQuestion: () => axios.get(url + 'get-all-questions'),
+            deleteQuestion: (question, id) => axios.post(url + 'delete-question/' + id, question)
         };
     },
     answer(url = baseApi + 'answer/') {
@@ -41,9 +47,26 @@ export default {
     },
     exam(url = baseApi + 'exam/') {
         return {
-            getAllExam: () => axios.get(url + '/get-exam'),
-            getExamById: (id) => axios.get(url + '/get-exam-by-id/' + id),
-            createExam: (exam) => axios.post(url + '/generate-exam', exam)
+            getAllExam: () => axios.get(url + 'get-exam'),
+            getExamById: (id) => axios.get(url + 'get-exam-by-id/' + id),
+            createExam: (exam) => axios.post(url + 'generate-exam', exam),
+            getExamByUserId: (id) => axios.get(url + 'get-exam-by-user-id/' + id),
+            getExamUserId: (ids) => axios.post(url + 'get-exam-user', ids),
+            deleteExam: (id) => axios.delete(url + 'delete-exam/' + id),
+            updateExam: (exam, id) => axios.post(url + 'update-exam/' + id, exam)
+        };
+    },
+    examStudent(url = baseApi + 'exam-student/') {
+        return {
+            createExamStudent: (exam) => axios.post(url + 'generate-exam-student', exam)
+        };
+    },
+    result(url = baseApi + 'result/') {
+        return {
+            createResult: (rs, id) => axios.post(url + 'add-result/' + id, rs),
+            getResult: (id) => axios.get(url + 'get-result/' + id),
+            getResultByUserId: (id) => axios.get(url + 'get-result-by-user-id/' + id),
+            getResultByExamId: (id) => axios.get(url + 'get-result-by-exam-id/' + id)
         };
     }
 };

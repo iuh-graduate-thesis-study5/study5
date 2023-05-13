@@ -25,7 +25,9 @@ export default function QuestionPart7({ question }) {
             numberQuestion: questionIndex + 1,
             isChoosen: true,
             answer: answer,
-            className: 'inputColorActive'
+            className: 'inputColorActive',
+            dap_an_dung: listQuestion[questionIndex].dap_an_dung,
+            id_question: listQuestion[questionIndex].id_question
         };
         listQuestion.splice(questionIndex, 1, question);
         dispatch(action.chooseQuestion(listQuestion));
@@ -33,7 +35,7 @@ export default function QuestionPart7({ question }) {
     return (
         <>
             {question?.map((e, i) => (
-                <Grid container style={{ margin: '0 -1rem', paddingBottom: 32 }}>
+                <Grid container style={{ margin: '0 -1rem', paddingBottom: 32 }} key={i}>
                     <Grid
                         item
                         xs={7.5}
@@ -65,8 +67,8 @@ export default function QuestionPart7({ question }) {
                                         <p style={{ fontSize: 16, marginTop: 3, marginBottom: 10 }}>{nch?.noidung}</p>
                                         {nch?.dapans
                                             ?.sort((a, b) => (a?.dapanthu > b.dapanthu ? 1 : -1))
-                                            .map((da) => (
-                                                <>
+                                            .map((da, idx) => (
+                                                <React.Fragment key={idx}>
                                                     <input
                                                         type="radio"
                                                         id={'q' + da.dapanthu}
@@ -78,7 +80,7 @@ export default function QuestionPart7({ question }) {
                                                         {da?.dapanthu}. {da.noidung}
                                                     </label>
                                                     <br />
-                                                </>
+                                                </React.Fragment>
                                             ))}
                                     </div>
                                 </div>

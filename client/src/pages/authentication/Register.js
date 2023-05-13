@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Grid, Stack, Typography } from '@mui/material';
 
 // project import
-import FirebaseRegister from './auth-forms/AuthRegister';
+import AuthRegister from './auth-forms/AuthRegister';
 import AuthWrapper from './AuthWrapper';
 
 // ================================|| REGISTER ||================================ //
@@ -14,14 +14,14 @@ const Register = () => (
         <Grid container spacing={3}>
             <Grid item xs={12}>
                 <Stack direction="row" justifyContent="space-between" alignItems="baseline" sx={{ mb: { xs: -0.5, sm: 0.5 } }}>
-                    <Typography variant="h3">Sign up</Typography>
+                    <Typography variant="h3">Đăng ký</Typography>
                     <Typography component={Link} to="/login" variant="body1" sx={{ textDecoration: 'none' }} color="primary">
-                        Already have an account?
+                        Tôi đã có tài khoản?
                     </Typography>
                 </Stack>
             </Grid>
             <Grid item xs={12}>
-                <FirebaseRegister />
+                <AuthRegister />
             </Grid>
         </Grid>
     </AuthWrapper>

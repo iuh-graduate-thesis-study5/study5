@@ -25,7 +25,10 @@ import iconwoman from '../../assets/user/icon-women.png';
 import Badge from '@mui/material/Badge';
 import SyncAltIcon from '@mui/icons-material/SyncAlt';
 import * as examAction from 'actions/exam.action';
+import { useEffect, useState } from 'react';
+import moment from 'moment';
 import 'css/exam.css';
+import exam from 'menu-items/exams';
 const initialFieldValues = {
     tieude: '',
     mota: ''
@@ -38,18 +41,22 @@ export default function AccountButtonComponent() {
     const [listUser, setListUser] = React.useState([]);
     const [listStudent, setListStudent] = React.useState([]);
     const [type, setType] = React.useState(0);
+    const account = useSelector((state) => state.account.account);
+    const user_id = useSelector((state) => state.account.userAuth);
+    const exams = useSelector((state) => state.exam.listExam);
+
+    useEffect(() => {
+        if (user_id) {
+            dispatch(action.getAccount(user_id));
+        }
+    }, [user_id]);
     React.useEffect(() => {
         dispatch(action.test());
     }, []);
-    React.useEffect(() => {
-        if (users) {
-            setListUser(users);
-        }
-    }, [users]);
     const validate = (fieldValues = values) => {
         let temp = { ...errors };
-        if ('tennguoidung' in fieldValues) {
-            temp.tennguoidung = fieldValues.tennguoidung ? '' : 'Số người không được để trống';
+        if ('tieude' in fieldValues) {
+            temp.tieude = fieldValues.tieude ? '' : 'Vui lòng nhập tiêu đề';
         }
         if ('email' in fieldValues) {
             temp.email = fieldValues.email ? '' : 'Email không được để trống';
@@ -66,6 +73,7 @@ export default function AccountButtonComponent() {
     };
 
     const handleClose = () => {
+        resetForm();
         setOpen(false);
     };
     const handleSubmit = () => {
@@ -84,17 +92,66 @@ export default function AccountButtonComponent() {
     const changeTypeOfExam = (event) => {
         setType(event.target.value);
     };
-    const generateExam = () => {
+    const clear = () => {
+        setValue(dayjs(Date.now()));
+        if (exam) {
+            const listExistedUserId = [];
+            exams.forEach((e) => {
+                if (moment(e.thoigianthi).format('DD/MM/YYYY') === moment(value.$d).format('DD/MM/YYYY')) {
+                    e?.dethithisinhs?.forEach((elm) => {
+                        listExistedUserId.push(elm?.taikhoan?.nguoidung?.id);
+                    });
+                }
+            });
+            setListUser(users.filter((e) => !listExistedUserId.includes(e.id)));
+        }
+        setListStudent([]);
+    };
+    const generateExam = (e) => {
+        e.preventDefault();
         const listIdStudent = [];
+        if (values.tieude.length == 0) {
+            window.alert('Vui lòng nhập tiêu đề');
+            return;
+        }
+        console.log(listStudent);
         for (let i = 0; i < listStudent.length; i++) {
             listIdStudent.push(listStudent[i].id);
         }
-        values.id_nguoitao = 1;
+        if (!type) {
+            if (moment(value.$d).isBefore(moment(Date.now()))) {
+                window.alert('Vui lòng chọn giờ thi lớn hơn hiện tại');
+                return;
+            }
+            if (listStudent.length === 0) {
+                window.alert('Vui lòng thêm thí sinh cho bài thi này');
+                return;
+            }
+        }
+
+        values.id_nguoitao = user_id;
         values.thoigianthi = value;
         values.loaidethi = type;
         values.listStudent = listIdStudent;
         dispatch(examAction.generateExam(values));
+        resetForm();
+        clear();
+        handleClose();
     };
+    useEffect(() => {
+        if (exam) {
+            const listExistedUserId = [];
+            exams.forEach((e) => {
+                if (moment(e.thoigianthi).format('DD/MM/YYYY') === moment(value.$d).format('DD/MM/YYYY')) {
+                    console.log(e?.dethithisinhs);
+                    e?.dethithisinhs?.forEach((elm) => {
+                        listExistedUserId.push(elm?.taikhoan?.nguoidung?.id);
+                    });
+                }
+            });
+            setListUser(users.filter((e) => !listExistedUserId.includes(e.nguoidung.id)));
+        }
+    }, [exam, value, users]);
     return (
         <div style={{ margin: '1rem 0' }}>
             <Button variant="contained" size="medium" onClick={handleClickOpen}>
@@ -128,9 +185,9 @@ export default function AccountButtonComponent() {
                                     name="tennguoidung"
                                     type="text"
                                     autoComplete="off"
-                                    InputProps={{ inputProps: { min: 0, max: 20 } }}
+                                    InputProps={{ inputProps: { min: 0, max: 20, readOnly: true } }}
                                     fullWidth
-                                    value={values.tennguoidung || ''}
+                                    value={account?.nguoidung?.tennguoidung}
                                     onChange={handleInputChange}
                                     {...(errors.tennguoidung && { error: true, helperText: errors.tennguoidung })}
                                 />
@@ -155,7 +212,11 @@ export default function AccountButtonComponent() {
                                         <p>Thời gian thi</p>
                                         <LocalizationProvider dateAdapter={AdapterDayjs} style={{ padding: 0 }}>
                                             <DemoContainer components={['DateTimePicker', 'DateTimePicker']} style={{ padding: 0 }}>
-                                                <DateTimePicker value={value} onChange={(newValue) => setValue(newValue)} />
+                                                <DateTimePicker
+                                                    format="DD/MM/YYYY - HH:mm a"
+                                                    value={value}
+                                                    onChange={(newValue) => setValue(newValue)}
+                                                />
                                             </DemoContainer>
                                         </LocalizationProvider>
                                     </Grid>
@@ -190,7 +251,7 @@ export default function AccountButtonComponent() {
                                                 e.gioitinh === 'Nam' ? (
                                                     <Grid item xs={2} style={{ textAlign: 'center', position: 'relative' }} key={e.id}>
                                                         <img style={{ width: '100%' }} src={iconman} alt="man" />
-                                                        <span>{e.tennguoidung}</span>
+                                                        <span>{e?.nguoidung?.tennguoidung}</span>
                                                         <div className="minus" onClick={() => removeStudent(e)} aria-hidden="true">
                                                             _
                                                         </div>
@@ -198,7 +259,7 @@ export default function AccountButtonComponent() {
                                                 ) : (
                                                     <Grid item xs={2} style={{ textAlign: 'center', position: 'relative' }} key={e.id}>
                                                         <img style={{ width: '100%' }} src={iconwoman} alt="woman" />
-                                                        <span>{e.tennguoidung}</span>
+                                                        <span>{e?.nguoidung?.tennguoidung}</span>
                                                         <div className="minus" onClick={() => removeStudent(e)} aria-hidden="true">
                                                             _
                                                         </div>
@@ -213,15 +274,7 @@ export default function AccountButtonComponent() {
                             )}
                         </Grid>
                         <br></br>
-                        <Button
-                            fullWidth
-                            size="large"
-                            variant="contained"
-                            color="primary"
-                            type="submit"
-                            onClick={generateExam}
-                            // style={{ display: displayButton }}
-                        >
+                        <Button fullWidth size="large" variant="contained" color="primary" type="submit" onClick={generateExam}>
                             TẠO ĐỀ THI
                         </Button>
                     </Formsy>

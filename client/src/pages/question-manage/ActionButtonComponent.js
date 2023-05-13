@@ -26,6 +26,7 @@ import * as groupQuestionActions from 'actions/groupquestion.action';
 import * as questionActions from 'actions/question.action';
 import * as answerAction from 'actions/answer.action';
 import * as uploadAction from 'actions/upload.action';
+import { useSelector } from 'react-redux';
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -467,16 +468,25 @@ export default function AccountButtonComponent() {
             );
         }
     };
+    const user_id = useSelector((state) => state.account.userAuth);
     const handelSubmitForm = () => {
+        if ([1, 2, 3, 4].includes(part) && !audioPicked) {
+            window.alert('Vui lòng chọn âm thanh');
+            return;
+        }
+        if (part === 1 && !imagePicked) {
+            window.alert('Vui lòng chọn ảnh');
+            return;
+        }
+
         if (!validate()) {
-            console.log('s');
             return;
         }
         const nhomCauhoi = {
             noidungcauhoi: values.cauhoichung,
             amthanh: audioPicked,
             hinhanh: imagePicked,
-            id_nguoitao: 1,
+            id_nguoitao: user_id,
             phancauhoi: part
         };
         let groupQuestionLength = 4;
@@ -526,7 +536,6 @@ export default function AccountButtonComponent() {
                         .then((response) => {
                             for (let ans = 0; ans < answerLength; ans++) {
                                 setTimeout(() => {
-                                    console.log('b');
                                     dispatch(
                                         groupQuestionActions.addAnswer({
                                             noidung: values[`question_${i}_${listAnswerAlpha[ans]}`],

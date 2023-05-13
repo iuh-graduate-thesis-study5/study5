@@ -9,7 +9,7 @@ import Chip from '@mui/material/Chip';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import LoopIcon from '@mui/icons-material/Loop';
-export default function CardPoint({ header }) {
+export default function CardPoint({ header, max, min, avg }) {
     return (
         <Card sx={{ minWidth: 275 }}>
             <CardContent>
@@ -17,15 +17,15 @@ export default function CardPoint({ header }) {
 
                 <Typography sx={{ mt: 1 }} variant="h6" component="div" style={{ display: 'flex' }}>
                     <TrendingUpIcon color="success" />
-                    &nbsp; Điểm cao nhất: 100
+                    &nbsp; Điểm cao nhất: {max}
                 </Typography>
                 <Typography sx={{ mt: 1 }} variant="h6" component="div" style={{ display: 'flex' }}>
                     <TrendingDownIcon color="error" />
-                    &nbsp; Điểm thấp nhất: 1
+                    &nbsp; Điểm thấp nhất: {min}
                 </Typography>
                 <Typography sx={{ mt: 1 }} variant="h6" component="div" style={{ display: 'flex' }}>
                     <LoopIcon color="primary" />
-                    &nbsp; Điểm trung bình: 1
+                    &nbsp; Điểm trung bình: {avg}
                 </Typography>
             </CardContent>
             <CardActions></CardActions>

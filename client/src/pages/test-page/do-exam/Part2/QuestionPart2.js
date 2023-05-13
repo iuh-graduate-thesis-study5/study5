@@ -23,7 +23,9 @@ export default function QuestionPart2({ question }) {
             numberQuestion: questionIndex + 1,
             isChoosen: true,
             answer: answer,
-            className: 'inputColorActive'
+            className: 'inputColorActive',
+            dap_an_dung: listQuestion[questionIndex].dap_an_dung,
+            id_question: listQuestion[questionIndex].id_question
         };
         listQuestion.splice(questionIndex, 1, question);
         dispatch(action.chooseQuestion(listQuestion));
@@ -44,12 +46,12 @@ export default function QuestionPart2({ question }) {
                         </div>
 
                         <div>
-                            {e?.nhomcauhoi?.cauhois[0].dapans.map((da) => (
-                                <>
+                            {e?.nhomcauhoi?.cauhois[0].dapans.map((da, u) => (
+                                <React.Fragment key={u}>
                                     <input
                                         type="radio"
                                         id={'q' + da.dapanthu}
-                                        name={'q2' + i}
+                                        name={'q2' + e?.nhomcauhoi.id}
                                         value={da.dapanthu}
                                         onClick={() => chooseQuestion(i + 3, da.dapanthu)}
                                     />
@@ -57,7 +59,7 @@ export default function QuestionPart2({ question }) {
                                         {da.dapanthu}.
                                     </label>
                                     <br />
-                                </>
+                                </React.Fragment>
                             ))}
                         </div>
                     </div>

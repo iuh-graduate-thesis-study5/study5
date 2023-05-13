@@ -6,6 +6,8 @@ for (let i = 1; i <= 51; i++) {
         numberQuestion: i,
         isChoosen: false,
         answer: '',
+        id_question: '',
+        dap_an_dung: '',
         className: 'inputColor'
     };
     listChooseQuestion.push(question);

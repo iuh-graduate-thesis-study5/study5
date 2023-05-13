@@ -20,14 +20,10 @@ export default function PracticeTest() {
     return (
         <>
             <Grid container spacing={3}>
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((e) => (
-                    <>
-                        {listTestExam?.map((e, i) => (
-                            <Grid item xs={4} key={i}>
-                                <CardPractice listTestExam={e} />
-                            </Grid>
-                        ))}
-                    </>
+                {listTestExam?.map((e, i) => (
+                    <Grid item xs={4} key={i}>
+                        <CardPractice listTestExam={e} />
+                    </Grid>
                 ))}
             </Grid>
             <br />
