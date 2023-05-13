@@ -1,4 +1,7 @@
+import { where } from 'sequelize';
 import { db } from '../db.js';
+import { nguoidung } from '../entity/User.js';
+import { getAccount } from './auth.js';
 
 export const getUser = (req, res) => {
     //CHECK USER
@@ -18,6 +21,26 @@ export const addUser = (req, res) => {
         if (err) return res.status(500).json(err);
         return getUser(req, res);
     });
+};
+export const updateUser = (req, res) => {
+    nguoidung
+        .update(req.body, { where: { id: req.params.id } })
+        .then((rs) => {
+            return getUser(req, res);
+        })
+        .catch((err) => {
+            return res.status(400).json({ err });
+        });
+};
+export const register = (req, res) => {
+    nguoidung
+        .create(req.body)
+        .then((rs) => {
+            return res.status(200).json(rs);
+        })
+        .catch((err) => {
+            return res.status(400).json({ err });
+        });
 };
 
 export const userNotAccount = (req, res) => {

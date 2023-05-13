@@ -5,7 +5,9 @@ import questionRouter from './routes/question.js';
 import answerRouter from './routes/answer.js';
 import groupQuestionRouter from './routes/groupQuestion.js';
 import examRouter from './routes/exam.router.js';
+import examStudent from './routes/examStudent.router.js';
 import uploadRouter from './routes/upload.js';
+import resultRouter from './routes/result.router.js';
 import cookieParser from 'cookie-parser';
 import multer from 'multer';
 import cors from 'cors';
@@ -32,8 +34,9 @@ app.use('/api/users', userRoutes);
 app.use('/api/question', questionRouter);
 app.use('/api/groupquestion', groupQuestionRouter);
 app.use('/api/answer', answerRouter);
+app.use('/api/result', resultRouter);
+app.use('/api/exam-student', examStudent);
 
 app.listen(8800, () => {
-    console.log('Connected!');
     console.log('The server starting in localhost:8800!');
 });

@@ -17,10 +17,10 @@ export const dethithisinh = sequelize.define(
 );
 
 taikhoan.hasMany(dethithisinh, { foreignKey: 'id_thisinh' });
-dethithisinh.hasOne(taikhoan, {
-    foreignKey: 'id'
+dethithisinh.belongsTo(taikhoan, {
+    foreignKey: 'id_thisinh'
 });
 dethi.hasMany(dethithisinh, { foreignKey: 'id_dethi' });
-dethithisinh.hasOne(dethi, {
-    foreignKey: 'id'
+dethithisinh.belongsTo(dethi, {
+    foreignKey: 'id_dethi'
 });

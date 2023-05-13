@@ -1,5 +1,7 @@
 import { db } from '../db.js';
 import bcrypt from 'bcryptjs';
+import { taikhoan } from '../entity/Account.js';
+import { nguoidung } from '../entity/User.js';
 import jwt from 'jsonwebtoken';
 
 export const register = (req, res) => {
@@ -60,13 +62,20 @@ export const logout = (req, res) => {
 
 export const getAllAccount = (req, res) => {
     //CHECK USER
-
-    const q = 'SELECT * FROM taikhoan tk inner join nguoidung nd on tk.id_nguoidung = nd.id';
-    db.query(q, [req.query.cat], (err, data) => {
-        if (err) return res.status(500).send(err);
-
-        return res.status(200).json(data);
-    });
+    taikhoan
+        .findAll({
+            include: [
+                {
+                    model: nguoidung
+                }
+            ]
+        })
+        .then((exam) => {
+            return res.status(200).json(exam);
+        })
+        .catch((err) => {
+            return res.status(400).json({ err });
+        });
 };
 
 export const updateAccount = (req, res) => {
@@ -81,4 +90,41 @@ export const updateAccount = (req, res) => {
         if (err) return res.status(500).json(err);
         return getAllAccount(req, res);
     });
+};
+
+export const getAccount = (req, res) => {
+    taikhoan
+        .findOne({
+            include: [
+                {
+                    model: nguoidung
+                }
+            ],
+            where: {
+                id: req.params.id
+            }
+        })
+        .then((exam) => {
+            return res.status(200).json(exam);
+        })
+        .catch((err) => {
+            return res.status(400).json({ err });
+        });
+};
+export const uploadAccount = (req, res) => {
+    taikhoan
+        .update(req.body, { where: { id: req.params.id } })
+        .then((users) => {
+            nguoidung
+                .update(req.body, { where: { id: req.params.user_id } })
+                .then((users) => {
+                    return getAccount(req, res);
+                })
+                .catch((err) => {
+                    return res.status(400).json({ err });
+                });
+        })
+        .catch((err) => {
+            return res.status(400).json({ err });
+        });
 };

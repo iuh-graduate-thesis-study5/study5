@@ -14,6 +14,7 @@ export const nhomcauhoi = sequelize.define(
         hinhanh: Sequelize.STRING,
         phancauhoi: Sequelize.INTEGER,
         id_nguoitao: Sequelize.INTEGER,
+        trangthai: Sequelize.INTEGER,
         ngaytao: {
             field: 'ngaytao',
             type: DataTypes.DATE,
